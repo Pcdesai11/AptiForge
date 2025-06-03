@@ -1,0 +1,24 @@
+John Doe
+Email: john.doe@example.com
+Phone: (123) 456-7890
+Location: Seattle, WA
+
+Summary:
+Software engineer with 3 years of experience in backend development, REST APIs, and cloud infrastructure. Skilled in building scalable web applications using Python, Flask, and PostgreSQL. Experience with Docker, Git, and deploying to AWS.
+
+Skills:
+- Python, Flask, Django
+- PostgreSQL, MySQL
+- RESTful APIs
+- Git, GitHub, Docker
+- AWS EC2, S3, Lambda
+- CI/CD with GitHub Actions
+
+Experience:
+Backend Developer – TechFlow Inc. (2021–2023)
+- Developed microservices in Flask for a real-time analytics platform.
+- Wrote unit and integration tests using pytest and automated deployment via GitHub Actions.
+- Collaborated using Git and conducted code reviews.
+
+Education:
+B.S. in Computer Science – University of Washington (2017–2021)

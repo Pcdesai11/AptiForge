@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Flask REST API",
+    "tags": ["python", "flask", "api"],
+    "difficulty": "beginner",
+    "description": "Build a to-do app backend using Flask and Postman."
+  },
+  {
+    "title": "Deploy ML Model with FastAPI",
+    "tags": ["python", "fastapi", "docker", "ml"],
+    "difficulty": "intermediate",
+    "description": "Train a model and expose it as a REST API using FastAPI and Docker."
+  },
+  {
+    "title": "CI/CD with GitHub Actions",
+    "tags": ["git", "ci/cd", "github"],
+    "difficulty": "intermediate",
+    "description": "Set up automated tests and deployment for a Flask app."
+  },
+  {
+    "title": "Build a Personal Portfolio",
+    "tags": ["html", "css", "javascript", "react"],
+    "difficulty": "beginner",
+    "description": "Make a portfolio site using React and host it with GitHub Pages."
+  }
+]

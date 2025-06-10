@@ -7,6 +7,8 @@ with open(file_path, "rb") as f:
     response = requests.post(url, files={"file": f})
 
 print("Status Code:", response.status_code)
+print("Raw Response Text:") 
+print(response.text)
 data = response.json()
 
 print("\nExtracted Skills:")

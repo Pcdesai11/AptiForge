@@ -1,7 +1,12 @@
 import json
+import os
 
 
-def load_projects(path="data/project_ideas.json"):
+def load_projects():
+    current_dir = os.path.dirname(__file__)  # this is /backend
+    path = os.path.join(current_dir, "..", "data", "project_ideas.json")  # go up to root, into /data
+    path = os.path.abspath(path)  # absolute path to avoid issues
+
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 

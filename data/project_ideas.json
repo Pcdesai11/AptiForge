@@ -2,190 +2,546 @@
   {
     "id": "flask-rest-api",
     "title": "Flask REST API",
-    "tags": ["python", "flask", "api", "rest"],
-    "tech_stack": ["Python", "Flask", "Postman"],
+    "tags": [
+      "python",
+      "flask",
+      "api",
+      "rest"
+    ],
+    "tech_stack": [
+      "Python",
+      "Flask",
+      "Postman"
+    ],
     "difficulty": "beginner",
     "description": "Build a to-do app backend using Flask and Postman.",
-    "learning_focus": "backend api rest flask python"
+    "learning_focus": "backend api rest flask python",
+    "track": "backend",
+    "time_estimate": "1 weekend",
+    "milestones": [
+      "Scaffold the Flask REST API repo and write a short README",
+      "Implement the core feature with Python, Flask, Postman",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "fastapi-ml-deploy",
     "title": "Deploy ML Model with FastAPI",
-    "tags": ["python", "fastapi", "docker", "machine learning", "ml"],
-    "tech_stack": ["Python", "FastAPI", "Docker", "scikit-learn"],
+    "tags": [
+      "python",
+      "fastapi",
+      "docker",
+      "machine learning",
+      "ml"
+    ],
+    "tech_stack": [
+      "Python",
+      "FastAPI",
+      "Docker",
+      "scikit-learn"
+    ],
     "difficulty": "intermediate",
     "description": "Train a model and expose it as a REST API using FastAPI and Docker.",
-    "learning_focus": "machine learning mlops docker api deployment"
+    "learning_focus": "machine learning mlops docker api deployment",
+    "track": "ml",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the Deploy ML Model with FastAPI repo and write a short README",
+      "Implement the core feature with Python, FastAPI, Docker, scikit-learn",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "github-actions-cicd",
     "title": "CI/CD with GitHub Actions",
-    "tags": ["git", "ci/cd", "github", "python", "flask"],
-    "tech_stack": ["GitHub Actions", "Flask", "pytest"],
+    "tags": [
+      "git",
+      "ci/cd",
+      "github",
+      "python",
+      "flask"
+    ],
+    "tech_stack": [
+      "GitHub Actions",
+      "Flask",
+      "pytest"
+    ],
     "difficulty": "intermediate",
     "description": "Set up automated tests and deployment for a Flask app.",
-    "learning_focus": "devops ci cd github automation testing"
+    "learning_focus": "devops ci cd github automation testing",
+    "track": "devops",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the CI/CD with GitHub Actions repo and write a short README",
+      "Implement the core feature with GitHub Actions, Flask, pytest",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "personal-portfolio",
     "title": "Build a Personal Portfolio",
-    "tags": ["html", "css", "javascript", "react"],
-    "tech_stack": ["React", "HTML", "CSS", "GitHub Pages"],
+    "tags": [
+      "html",
+      "css",
+      "javascript",
+      "react"
+    ],
+    "tech_stack": [
+      "React",
+      "HTML",
+      "CSS",
+      "GitHub Pages"
+    ],
     "difficulty": "beginner",
     "description": "Make a portfolio site using React and host it with GitHub Pages.",
-    "learning_focus": "frontend react portfolio javascript css"
+    "learning_focus": "frontend react portfolio javascript css",
+    "track": "frontend",
+    "time_estimate": "1 weekend",
+    "milestones": [
+      "Scaffold the Build a Personal Portfolio repo and write a short README",
+      "Implement the core feature with React, HTML, CSS, GitHub Pages",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "go-backend-service",
     "title": "Go HTTP Microservice",
-    "tags": ["go", "api", "docker", "sql"],
-    "tech_stack": ["Go", "PostgreSQL", "Docker"],
+    "tags": [
+      "go",
+      "api",
+      "docker",
+      "sql"
+    ],
+    "tech_stack": [
+      "Go",
+      "PostgreSQL",
+      "Docker"
+    ],
     "difficulty": "intermediate",
     "description": "Build a small Go backend with REST endpoints, SQL storage, and Docker packaging.",
-    "learning_focus": "backend golang go microservice api database"
+    "learning_focus": "backend golang go microservice api database",
+    "track": "backend",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the Go HTTP Microservice repo and write a short README",
+      "Implement the core feature with Go, PostgreSQL, Docker",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "react-dashboard",
     "title": "Interactive React Dashboard",
-    "tags": ["react", "javascript", "api", "css"],
-    "tech_stack": ["React", "Fetch API", "CSS"],
+    "tags": [
+      "react",
+      "javascript",
+      "api",
+      "css"
+    ],
+    "tech_stack": [
+      "React",
+      "Fetch API",
+      "CSS"
+    ],
     "difficulty": "intermediate",
     "description": "Create a dashboard that visualizes live API data with filters and charts.",
-    "learning_focus": "frontend react visualization javascript ui"
+    "learning_focus": "frontend react visualization javascript ui",
+    "track": "frontend",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the Interactive React Dashboard repo and write a short README",
+      "Implement the core feature with React, Fetch API, CSS",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "django-blog",
     "title": "Django Blog with Auth",
-    "tags": ["python", "django", "sql", "html"],
-    "tech_stack": ["Django", "SQLite", "HTML"],
+    "tags": [
+      "python",
+      "django",
+      "sql",
+      "html"
+    ],
+    "tech_stack": [
+      "Django",
+      "SQLite",
+      "HTML"
+    ],
     "difficulty": "beginner",
     "description": "Ship a blog with user auth, CRUD posts, and simple templates.",
-    "learning_focus": "backend django auth orm python web"
+    "learning_focus": "backend django auth orm python web",
+    "track": "backend",
+    "time_estimate": "1 weekend",
+    "milestones": [
+      "Scaffold the Django Blog with Auth repo and write a short README",
+      "Implement the core feature with Django, SQLite, HTML",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "aws-serverless-notes",
     "title": "Serverless Notes on AWS",
-    "tags": ["aws", "python", "api", "javascript"],
-    "tech_stack": ["AWS Lambda", "API Gateway", "DynamoDB"],
+    "tags": [
+      "aws",
+      "python",
+      "api",
+      "javascript"
+    ],
+    "tech_stack": [
+      "AWS Lambda",
+      "API Gateway",
+      "DynamoDB"
+    ],
     "difficulty": "advanced",
     "description": "Build a notes API on Lambda and call it from a small web UI.",
-    "learning_focus": "cloud aws serverless backend api"
+    "learning_focus": "cloud aws serverless backend api",
+    "track": "backend",
+    "time_estimate": "2-4 weeks",
+    "milestones": [
+      "Scaffold the Serverless Notes on AWS repo and write a short README",
+      "Implement the core feature with AWS Lambda, API Gateway, DynamoDB",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "node-chat-socket",
     "title": "Realtime Chat with Node.js",
-    "tags": ["node.js", "javascript", "api"],
-    "tech_stack": ["Node.js", "Socket.IO", "Express"],
+    "tags": [
+      "node.js",
+      "javascript",
+      "api"
+    ],
+    "tech_stack": [
+      "Node.js",
+      "Socket.IO",
+      "Express"
+    ],
     "difficulty": "intermediate",
     "description": "Create a realtime chat room with WebSockets and Express.",
-    "learning_focus": "backend realtime websockets node javascript"
+    "learning_focus": "backend realtime websockets node javascript",
+    "track": "backend",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the Realtime Chat with Node.js repo and write a short README",
+      "Implement the core feature with Node.js, Socket.IO, Express",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "kubernetes-demo-app",
     "title": "Containerize and Deploy with Kubernetes",
-    "tags": ["docker", "kubernetes", "api", "python"],
-    "tech_stack": ["Docker", "Kubernetes", "Flask"],
+    "tags": [
+      "docker",
+      "kubernetes",
+      "api",
+      "python"
+    ],
+    "tech_stack": [
+      "Docker",
+      "Kubernetes",
+      "Flask"
+    ],
     "difficulty": "advanced",
     "description": "Package a Flask service and deploy it to a local Kubernetes cluster.",
-    "learning_focus": "devops kubernetes docker containers deployment"
+    "learning_focus": "devops kubernetes docker containers deployment",
+    "track": "devops",
+    "time_estimate": "2-4 weeks",
+    "milestones": [
+      "Scaffold the Containerize and Deploy with Kubernetes repo and write a short README",
+      "Implement the core feature with Docker, Kubernetes, Flask",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "tensorflow-image-classifier",
     "title": "Image Classifier with TensorFlow",
-    "tags": ["python", "tensorflow", "machine learning", "deep learning"],
-    "tech_stack": ["TensorFlow", "Python", "Notebooks"],
+    "tags": [
+      "python",
+      "tensorflow",
+      "machine learning",
+      "deep learning"
+    ],
+    "tech_stack": [
+      "TensorFlow",
+      "Python",
+      "Notebooks"
+    ],
     "difficulty": "intermediate",
     "description": "Train and evaluate an image classifier, then document results.",
-    "learning_focus": "machine learning deep learning tensorflow computer vision"
+    "learning_focus": "machine learning deep learning tensorflow computer vision",
+    "track": "ml",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the Image Classifier with TensorFlow repo and write a short README",
+      "Implement the core feature with TensorFlow, Python, Notebooks",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "mongodb-task-tracker",
     "title": "Task Tracker with MongoDB",
-    "tags": ["javascript", "node.js", "mongodb", "api"],
-    "tech_stack": ["Node.js", "Express", "MongoDB"],
+    "tags": [
+      "javascript",
+      "node.js",
+      "mongodb",
+      "api"
+    ],
+    "tech_stack": [
+      "Node.js",
+      "Express",
+      "MongoDB"
+    ],
     "difficulty": "beginner",
     "description": "Build a CRUD task tracker backed by MongoDB.",
-    "learning_focus": "backend nosql mongodb node api"
+    "learning_focus": "backend nosql mongodb node api",
+    "track": "backend",
+    "time_estimate": "1 weekend",
+    "milestones": [
+      "Scaffold the Task Tracker with MongoDB repo and write a short README",
+      "Implement the core feature with Node.js, Express, MongoDB",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "rust-cli-tool",
     "title": "Rust CLI File Organizer",
-    "tags": ["rust", "linux", "bash"],
-    "tech_stack": ["Rust", "Clap"],
+    "tags": [
+      "rust",
+      "linux",
+      "bash"
+    ],
+    "tech_stack": [
+      "Rust",
+      "Clap"
+    ],
     "difficulty": "intermediate",
     "description": "Build a command-line tool that sorts files by type and date with tests.",
-    "learning_focus": "systems rust cli tooling"
+    "learning_focus": "systems rust cli tooling",
+    "track": "backend",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the Rust CLI File Organizer repo and write a short README",
+      "Implement the core feature with Rust, Clap",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "nextjs-saas-landing",
     "title": "Next.js SaaS Landing + Auth Shell",
-    "tags": ["typescript", "react", "next.js", "javascript"],
-    "tech_stack": ["Next.js", "TypeScript", "Tailwind"],
+    "tags": [
+      "typescript",
+      "react",
+      "next.js",
+      "javascript"
+    ],
+    "tech_stack": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind"
+    ],
     "difficulty": "intermediate",
     "description": "Ship a marketing page with signup flow stubs and protected dashboard routes.",
-    "learning_focus": "frontend nextjs typescript saas"
+    "learning_focus": "frontend nextjs typescript saas",
+    "track": "frontend",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the Next.js SaaS Landing + Auth Shell repo and write a short README",
+      "Implement the core feature with Next.js, TypeScript, Tailwind",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "graphql-bookstore",
     "title": "GraphQL Bookstore API",
-    "tags": ["graphql", "node.js", "javascript", "api"],
-    "tech_stack": ["Node.js", "Apollo Server", "SQLite"],
+    "tags": [
+      "graphql",
+      "node.js",
+      "javascript",
+      "api"
+    ],
+    "tech_stack": [
+      "Node.js",
+      "Apollo Server",
+      "SQLite"
+    ],
     "difficulty": "intermediate",
     "description": "Design GraphQL schemas for books, authors, and reviews with resolvers.",
-    "learning_focus": "api graphql backend schema design"
+    "learning_focus": "api graphql backend schema design",
+    "track": "backend",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the GraphQL Bookstore API repo and write a short README",
+      "Implement the core feature with Node.js, Apollo Server, SQLite",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "redis-rate-limiter",
     "title": "API Rate Limiter with Redis",
-    "tags": ["redis", "python", "flask", "api"],
-    "tech_stack": ["Python", "Flask", "Redis"],
+    "tags": [
+      "redis",
+      "python",
+      "flask",
+      "api"
+    ],
+    "tech_stack": [
+      "Python",
+      "Flask",
+      "Redis"
+    ],
     "difficulty": "intermediate",
     "description": "Protect a Flask API with Redis-backed sliding-window rate limits.",
-    "learning_focus": "backend redis caching scalability"
+    "learning_focus": "backend redis caching scalability",
+    "track": "backend",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the API Rate Limiter with Redis repo and write a short README",
+      "Implement the core feature with Python, Flask, Redis",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "terraform-static-site",
     "title": "Infra as Code for a Static Site",
-    "tags": ["terraform", "aws", "ci/cd"],
-    "tech_stack": ["Terraform", "AWS S3", "CloudFront"],
+    "tags": [
+      "terraform",
+      "aws",
+      "ci/cd"
+    ],
+    "tech_stack": [
+      "Terraform",
+      "AWS S3",
+      "CloudFront"
+    ],
     "difficulty": "advanced",
     "description": "Provision hosting for a static site entirely with Terraform and document it.",
-    "learning_focus": "devops terraform cloud infrastructure"
+    "learning_focus": "devops terraform cloud infrastructure",
+    "track": "devops",
+    "time_estimate": "2-4 weeks",
+    "milestones": [
+      "Scaffold the Infra as Code for a Static Site repo and write a short README",
+      "Implement the core feature with Terraform, AWS S3, CloudFront",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "nlp-resume-screener",
     "title": "NLP Resume Keyword Screener",
-    "tags": ["python", "nlp", "machine learning"],
-    "tech_stack": ["Python", "spaCy", "Streamlit"],
+    "tags": [
+      "python",
+      "nlp",
+      "machine learning"
+    ],
+    "tech_stack": [
+      "Python",
+      "spaCy",
+      "Streamlit"
+    ],
     "difficulty": "intermediate",
     "description": "Score resumes against a job description using NLP features and a simple UI.",
-    "learning_focus": "nlp machine learning python applications"
+    "learning_focus": "nlp machine learning python applications",
+    "track": "ml",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the NLP Resume Keyword Screener repo and write a short README",
+      "Implement the core feature with Python, spaCy, Streamlit",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "vue-expense-tracker",
     "title": "Vue Expense Tracker",
-    "tags": ["vue", "javascript", "css", "html"],
-    "tech_stack": ["Vue", "Vite", "LocalStorage"],
+    "tags": [
+      "vue",
+      "javascript",
+      "css",
+      "html"
+    ],
+    "tech_stack": [
+      "Vue",
+      "Vite",
+      "LocalStorage"
+    ],
     "difficulty": "beginner",
     "description": "Track expenses with charts and persistent local storage.",
-    "learning_focus": "frontend vue javascript ui"
+    "learning_focus": "frontend vue javascript ui",
+    "track": "frontend",
+    "time_estimate": "1 weekend",
+    "milestones": [
+      "Scaffold the Vue Expense Tracker repo and write a short README",
+      "Implement the core feature with Vue, Vite, LocalStorage",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "observability-demo",
     "title": "Observability for a Microservice",
-    "tags": ["python", "docker", "api", "kubernetes"],
-    "tech_stack": ["Python", "OpenTelemetry", "Prometheus", "Docker"],
+    "tags": [
+      "python",
+      "docker",
+      "api",
+      "kubernetes"
+    ],
+    "tech_stack": [
+      "Python",
+      "OpenTelemetry",
+      "Prometheus",
+      "Docker"
+    ],
     "difficulty": "advanced",
     "description": "Instrument a small API with metrics, traces, and dashboards.",
-    "learning_focus": "devops observability monitoring microservices"
+    "learning_focus": "devops observability monitoring microservices",
+    "track": "devops",
+    "time_estimate": "2-4 weeks",
+    "milestones": [
+      "Scaffold the Observability for a Microservice repo and write a short README",
+      "Implement the core feature with Python, OpenTelemetry, Prometheus, Docker",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   },
   {
     "id": "mobile-habit-kotlin",
     "title": "Habit Tracker in Kotlin",
-    "tags": ["kotlin", "android", "sql"],
-    "tech_stack": ["Kotlin", "Android", "Room"],
+    "tags": [
+      "kotlin",
+      "android",
+      "sql"
+    ],
+    "tech_stack": [
+      "Kotlin",
+      "Android",
+      "Room"
+    ],
     "difficulty": "intermediate",
     "description": "Build an Android habit tracker with local persistence and reminders.",
-    "learning_focus": "mobile kotlin android apps"
+    "learning_focus": "mobile kotlin android apps",
+    "track": "frontend",
+    "time_estimate": "1-2 weeks",
+    "milestones": [
+      "Scaffold the Habit Tracker in Kotlin repo and write a short README",
+      "Implement the core feature with Kotlin, Android, Room",
+      "Add tests or a demo script and push a clean commit history",
+      "Polish README with screenshots and deploy or record a walkthrough"
+    ]
   }
 ]

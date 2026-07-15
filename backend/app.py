@@ -16,6 +16,8 @@ from project_recommender import (
     recommend_projects,
 )
 from resume_parser import extract_skills, read_resume_bytes
+from anthropic_client import anthropic_enabled
+from semantic_search import pinecone_enabled
 
 load_dotenv()
 
@@ -38,41 +40,44 @@ def parse_top_k(raw, default: int = 5) -> tuple[int, tuple | None]:
     return value, None
 
 
+def _parse_use_ai(raw) -> bool:
+    if raw is None:
+        return True
+    if isinstance(raw, bool):
+        return raw
+    return str(raw).strip().lower() not in {"0", "false", "no", "off"}
+
+
 @app.route("/", methods=["GET"])
 def home():
     index_path = os.path.join(FRONTEND_DIR, "index.html")
     if os.path.isfile(index_path):
         return send_from_directory(FRONTEND_DIR, "index.html")
-    return jsonify(
-        {
-            "name": "AptiForge API",
-            "status": "ok",
-            "endpoints": [
-                "POST /upload_resume",
-                "POST /analyze_resume",
-                "POST /analyze_github",
-                "POST /recommend_projects",
-                "POST /export_roadmap",
-            ],
-        }
-    )
+    return jsonify(_api_payload())
+
+
+def _api_payload() -> dict:
+    return {
+        "name": "AptiForge API",
+        "status": "ok",
+        "ai": {
+            "anthropic": anthropic_enabled(),
+            "pinecone": pinecone_enabled(),
+        },
+        "endpoints": [
+            "POST /upload_resume",
+            "POST /analyze_resume",
+            "POST /analyze_github",
+            "POST /recommend_projects",
+            "POST /export_roadmap",
+            "GET /api",
+        ],
+    }
 
 
 @app.route("/api", methods=["GET"])
 def api_info():
-    return jsonify(
-        {
-            "name": "AptiForge API",
-            "status": "ok",
-            "endpoints": [
-                "POST /upload_resume",
-                "POST /analyze_resume",
-                "POST /analyze_github",
-                "POST /recommend_projects",
-                "POST /export_roadmap",
-            ],
-        }
-    )
+    return jsonify(_api_payload())
 
 
 @app.route("/upload_resume", methods=["POST"])
@@ -107,6 +112,7 @@ def analyze_resume():
     top_k, top_k_error = parse_top_k(request.form.get("top_k", 5))
     if top_k_error:
         return top_k_error
+    use_ai = _parse_use_ai(request.form.get("use_ai", "true"))
 
     try:
         resume_text = read_resume_bytes(file.filename, file.read())
@@ -119,7 +125,12 @@ def analyze_resume():
                 skills.update(github.get("skills", []))
 
         skills_list = sorted(skills)
-        projects = recommend_projects(skills_list, learning_goals=learning_goals, top_k=top_k)
+        projects = recommend_projects(
+            skills_list,
+            learning_goals=learning_goals,
+            top_k=top_k,
+            use_ai=use_ai,
+        )
 
         return jsonify(
             {
@@ -127,6 +138,11 @@ def analyze_resume():
                 "learning_goals": learning_goals,
                 "github": github,
                 "recommended_projects": projects,
+                "ai": {
+                    "requested": use_ai,
+                    "anthropic": anthropic_enabled(),
+                    "pinecone": pinecone_enabled(),
+                },
             }
         )
     except Exception:
@@ -152,9 +168,25 @@ def recommend_projects_route():
     top_k, top_k_error = parse_top_k(payload.get("top_k", 5))
     if top_k_error:
         return top_k_error
+    use_ai = _parse_use_ai(payload.get("use_ai", True))
 
-    projects = recommend_projects(skills, learning_goals=learning_goals, top_k=top_k)
-    return jsonify({"projects": projects, "count": len(projects)})
+    projects = recommend_projects(
+        skills,
+        learning_goals=learning_goals,
+        top_k=top_k,
+        use_ai=use_ai,
+    )
+    return jsonify(
+        {
+            "projects": projects,
+            "count": len(projects),
+            "ai": {
+                "requested": use_ai,
+                "anthropic": anthropic_enabled(),
+                "pinecone": pinecone_enabled(),
+            },
+        }
+    )
 
 
 @app.route("/export_roadmap", methods=["POST"])

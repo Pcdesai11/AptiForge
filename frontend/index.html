@@ -501,6 +501,60 @@
       text-align: center;
     }
 
+    .ai-toggle {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      text-transform: none;
+      letter-spacing: normal;
+      font-weight: 500;
+      font-size: 0.92rem;
+      color: var(--ink-soft);
+      cursor: pointer;
+    }
+
+    .ai-toggle input {
+      margin-top: 0.2rem;
+      accent-color: var(--forge);
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0.35rem 0 0.55rem;
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.45rem;
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      background: #fffdf8;
+    }
+
+    .badge-ai {
+      color: var(--forge);
+      border-color: color-mix(in srgb, var(--forge) 35%, var(--line));
+      background: var(--forge-soft);
+    }
+
+    .badge-custom {
+      color: var(--ember-deep);
+      border-color: color-mix(in srgb, var(--ember) 40%, var(--line));
+      background: rgba(196, 92, 38, 0.1);
+    }
+
+    .milestones {
+      margin: 0.75rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+
     @keyframes rise {
       from { opacity: 0; transform: translateY(22px); }
       to { opacity: 1; transform: translateY(0); }
@@ -572,6 +626,11 @@
       <label>
         Learning goals
         <textarea id="goals" placeholder="I want to learn backend with Go and Docker"></textarea>
+      </label>
+
+      <label class="ai-toggle">
+        <input id="use_ai" type="checkbox" checked />
+        <span>Use Anthropic for richer “why it fits” + invent a custom project when matches are weak</span>
       </label>
 
       <button class="btn btn-primary" type="submit" id="submit-btn">Forge my recommendations</button>
@@ -684,6 +743,7 @@
       const github = document.getElementById("github").value.trim();
       const goals = document.getElementById("goals").value.trim();
       const topK = document.getElementById("top_k").value.trim() || "5";
+      const useAi = document.getElementById("use_ai").checked;
 
       try {
         let data;
@@ -693,6 +753,7 @@
           body.append("learning_goals", goals);
           body.append("github_username", github);
           body.append("top_k", topK);
+          body.append("use_ai", useAi ? "true" : "false");
           const res = await fetch("/analyze_resume", { method: "POST", body });
           data = await res.json();
           if (!res.ok) throw new Error(data.error || "Analyze failed");
@@ -712,7 +773,12 @@
           const res = await fetch("/recommend_projects", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ skills, learning_goals: goals, top_k: Number(topK) }),
+            body: JSON.stringify({
+              skills,
+              learning_goals: goals,
+              top_k: Number(topK),
+              use_ai: useAi,
+            }),
           });
           const payload = await res.json();
           if (!res.ok) throw new Error(payload.error || "Recommend failed");
@@ -783,6 +849,14 @@
           const stack = p.recommended_tech_stack || p.tech_stack || [];
           const pct = fitPercent(p.score, maxScore);
           const delay = 0.18 + i * 0.1;
+          const badges = [];
+          if (p.custom) badges.push(`<span class="badge badge-custom">Custom generated</span>`);
+          if (p.why_source === "anthropic") badges.push(`<span class="badge badge-ai">Claude why</span>`);
+          if (p.semantic_source === "pinecone") badges.push(`<span class="badge">Pinecone</span>`);
+          else if (p.semantic_source === "tfidf") badges.push(`<span class="badge">Semantic TF-IDF</span>`);
+          const milestones = (p.milestones || [])
+            .map((m) => `<li>${escapeHtml(m)}</li>`)
+            .join("");
           return `
             <article class="project" style="animation-delay:${delay}s">
               <div class="rank">0${i + 1}</div>
@@ -791,8 +865,10 @@
                   <h3>${escapeHtml(p.title || "")}</h3>
                   <span class="difficulty" data-level="${escapeHtml((p.difficulty || "").toLowerCase())}">${escapeHtml(p.difficulty || "")}</span>
                 </div>
+                ${badges.length ? `<div class="badges">${badges.join("")}</div>` : ""}
                 <p class="desc">${escapeHtml(p.description || "")}</p>
                 <p class="why"><strong>Why it fits</strong> — ${escapeHtml(p.why || "")}</p>
+                ${milestones ? `<ul class="milestones">${milestones}</ul>` : ""}
                 <div class="stack-row">
                   ${stack.map((t) => `<span class="stack-item">${escapeHtml(t)}</span>`).join("")}
                 </div>

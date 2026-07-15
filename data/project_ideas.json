@@ -106,5 +106,86 @@
     "difficulty": "beginner",
     "description": "Build a CRUD task tracker backed by MongoDB.",
     "learning_focus": "backend nosql mongodb node api"
+  },
+  {
+    "id": "rust-cli-tool",
+    "title": "Rust CLI File Organizer",
+    "tags": ["rust", "linux", "bash"],
+    "tech_stack": ["Rust", "Clap"],
+    "difficulty": "intermediate",
+    "description": "Build a command-line tool that sorts files by type and date with tests.",
+    "learning_focus": "systems rust cli tooling"
+  },
+  {
+    "id": "nextjs-saas-landing",
+    "title": "Next.js SaaS Landing + Auth Shell",
+    "tags": ["typescript", "react", "next.js", "javascript"],
+    "tech_stack": ["Next.js", "TypeScript", "Tailwind"],
+    "difficulty": "intermediate",
+    "description": "Ship a marketing page with signup flow stubs and protected dashboard routes.",
+    "learning_focus": "frontend nextjs typescript saas"
+  },
+  {
+    "id": "graphql-bookstore",
+    "title": "GraphQL Bookstore API",
+    "tags": ["graphql", "node.js", "javascript", "api"],
+    "tech_stack": ["Node.js", "Apollo Server", "SQLite"],
+    "difficulty": "intermediate",
+    "description": "Design GraphQL schemas for books, authors, and reviews with resolvers.",
+    "learning_focus": "api graphql backend schema design"
+  },
+  {
+    "id": "redis-rate-limiter",
+    "title": "API Rate Limiter with Redis",
+    "tags": ["redis", "python", "flask", "api"],
+    "tech_stack": ["Python", "Flask", "Redis"],
+    "difficulty": "intermediate",
+    "description": "Protect a Flask API with Redis-backed sliding-window rate limits.",
+    "learning_focus": "backend redis caching scalability"
+  },
+  {
+    "id": "terraform-static-site",
+    "title": "Infra as Code for a Static Site",
+    "tags": ["terraform", "aws", "ci/cd"],
+    "tech_stack": ["Terraform", "AWS S3", "CloudFront"],
+    "difficulty": "advanced",
+    "description": "Provision hosting for a static site entirely with Terraform and document it.",
+    "learning_focus": "devops terraform cloud infrastructure"
+  },
+  {
+    "id": "nlp-resume-screener",
+    "title": "NLP Resume Keyword Screener",
+    "tags": ["python", "nlp", "machine learning"],
+    "tech_stack": ["Python", "spaCy", "Streamlit"],
+    "difficulty": "intermediate",
+    "description": "Score resumes against a job description using NLP features and a simple UI.",
+    "learning_focus": "nlp machine learning python applications"
+  },
+  {
+    "id": "vue-expense-tracker",
+    "title": "Vue Expense Tracker",
+    "tags": ["vue", "javascript", "css", "html"],
+    "tech_stack": ["Vue", "Vite", "LocalStorage"],
+    "difficulty": "beginner",
+    "description": "Track expenses with charts and persistent local storage.",
+    "learning_focus": "frontend vue javascript ui"
+  },
+  {
+    "id": "observability-demo",
+    "title": "Observability for a Microservice",
+    "tags": ["python", "docker", "api", "kubernetes"],
+    "tech_stack": ["Python", "OpenTelemetry", "Prometheus", "Docker"],
+    "difficulty": "advanced",
+    "description": "Instrument a small API with metrics, traces, and dashboards.",
+    "learning_focus": "devops observability monitoring microservices"
+  },
+  {
+    "id": "mobile-habit-kotlin",
+    "title": "Habit Tracker in Kotlin",
+    "tags": ["kotlin", "android", "sql"],
+    "tech_stack": ["Kotlin", "Android", "Room"],
+    "difficulty": "intermediate",
+    "description": "Build an Android habit tracker with local persistence and reminders.",
+    "learning_focus": "mobile kotlin android apps"
   }
 ]

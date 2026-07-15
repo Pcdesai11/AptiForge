@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import json
 import traceback
 
 from dotenv import load_dotenv
@@ -18,6 +19,7 @@ from project_recommender import (
 from resume_parser import extract_skills, read_resume_bytes
 from anthropic_client import anthropic_enabled
 from semantic_search import pinecone_enabled
+from project_assist import interview_talking_points, readme_starter, weekly_plan
 
 load_dotenv()
 
@@ -240,6 +242,61 @@ def export_roadmap():
     if fmt == "markdown":
         return jsonify({"format": "markdown", "content": export_roadmap_markdown(roadmap)})
     return jsonify({"format": "json", "roadmap": roadmap})
+
+
+@app.route("/project_assist", methods=["POST"])
+def project_assist():
+    """Interview tips, README draft, or weekly plan for one project."""
+    payload = request.get_json(silent=True) or {}
+    action = (payload.get("action") or "").strip().lower()
+    project = payload.get("project") or {}
+    skills = payload.get("skills") or []
+    if not project.get("title") and not project.get("id"):
+        return jsonify({"error": "project is required"}), 400
+
+    if action == "interview":
+        return jsonify({"action": action, **interview_talking_points(project, skills)})
+    if action == "readme":
+        return jsonify({"action": action, **readme_starter(project, skills)})
+    if action == "weekly":
+        return jsonify({"action": action, **weekly_plan(project, skills)})
+    return jsonify({"error": "action must be interview, readme, or weekly"}), 400
+
+
+@app.route("/analytics", methods=["GET", "POST"])
+def analytics():
+    """Lightweight local analytics store (best-effort on disk)."""
+    store_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "data", "analytics.json")
+    )
+
+    def _load() -> dict:
+        if not os.path.isfile(store_path):
+            return {"events": {}, "total": 0}
+        try:
+            with open(store_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {"events": {}, "total": 0}
+
+    def _save(data: dict) -> None:
+        try:
+            with open(store_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+        except Exception as exc:  # noqa: BLE001
+            print(f"analytics save failed: {exc}")
+
+    if request.method == "GET":
+        return jsonify(_load())
+
+    payload = request.get_json(silent=True) or {}
+    event = (payload.get("event") or "unknown").strip()[:80]
+    data = _load()
+    events = data.setdefault("events", {})
+    events[event] = int(events.get(event, 0)) + 1
+    data["total"] = int(data.get("total", 0)) + 1
+    _save(data)
+    return jsonify({"ok": True, "event": event, "count": events[event]})
 
 
 if __name__ == "__main__":

@@ -2045,7 +2045,6 @@
         await navigator.clipboard.writeText(url);
         showError("");
         document.getElementById("share-roadmap").textContent = "Share link copied";
-        trackEvent("share_link");
         setTimeout(() => { document.getElementById("share-roadmap").textContent = "Copy share link"; }, 1800);
       } catch (err) {
         showError("Could not copy the share link. You can copy it from the address bar.");

@@ -6,11 +6,13 @@ AptiForge helps you discover coding project ideas from your **resume**, **GitHub
 
 ## Features
 
-- Upload a resume (**PDF**, **DOCX**, or **TXT**) and extract tech skills
+- Upload a resume (**PDF**, **DOCX**, or **TXT**) — or **try the sample resume**
 - Analyze a public **GitHub** profile for languages and strengths
-- Enter **learning goals** in plain English
-- Get personalized suggestions with tech stack, difficulty, and **why it fits you**
-- **Save/export** recommended projects as Markdown or JSON roadmap
+- Enter **learning goals**, choose **comfort/stretch** fit, and filter by **track**
+- Get personalized suggestions with tech stack, difficulty, time estimate, skill gaps, and **why it fits**
+- Interactive **milestones**, **compare** up to 3 projects, and coaching (**interview tips / README / weekly plan**)
+- **Save/export** roadmap as Markdown, JSON, or PDF; **share** via URL; browse **recent runs**
+- Dark mode, forge reveal animations, and lightweight **usage** stats
 
 ## Project layout
 
@@ -84,11 +86,14 @@ Open **http://127.0.0.1:5000/** for the UI.
 |--------|----------|---------|
 | GET | `/` | Web UI |
 | GET | `/api` | API info |
+| GET | `/sample_resume` | Bundled demo resume |
 | POST | `/upload_resume` | Extract skills from a resume file |
 | POST | `/analyze_resume` | Skills + optional GitHub/goals + recommendations |
 | POST | `/analyze_github` | JSON `{"username": "..."}` |
-| POST | `/recommend_projects` | JSON skills + learning goals |
+| POST | `/recommend_projects` | JSON skills + learning goals (+ fit_mode/tracks) |
 | POST | `/export_roadmap` | JSON projects → roadmap Markdown/JSON |
+| POST | `/project_assist` | Interview tips / README / weekly plan |
+| GET/POST | `/analytics` | Lightweight usage counters |
 
 ### Optional Streamlit UI
 

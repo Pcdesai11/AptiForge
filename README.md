@@ -1,41 +1,95 @@
+# AptiForge
 
-🧠 AptiForge 
- AI-Powered Personalized Project Recommender for Developers
-AptiForge is an AI-powered tool that helps developers discover personalized coding project ideas based on their resume, GitHub activity, and learning goals.
+Personalized project recommender for developers.
 
-Whether you're preparing for interviews, building a portfolio, or just don’t know what to build next, AptiForge intelligently recommends projects tailored to your skills and aspirations using NLP and vector search.
+AptiForge helps you discover coding project ideas from your **resume**, **GitHub activity**, and **learning goals**. It extracts skills, ranks a project catalog with skill overlap + TF-IDF goal similarity, and exports a roadmap.
 
-🔍 Features
-Upload your resume (PDF or DOCX) to extract skills and experience
+## Features
 
-Analyze your GitHub profile to detect coding history and strengths
+- Upload a resume (**PDF**, **DOCX**, or **TXT**) and extract tech skills
+- Analyze a public **GitHub** profile for languages and strengths
+- Enter **learning goals** in plain English
+- Get personalized suggestions with tech stack, difficulty, and **why it fits you**
+- **Save/export** recommended projects as Markdown or JSON roadmap
 
-Enter your learning goals in plain English (e.g., "I want to learn backend with Go")
+## Project layout
 
-Get personalized project suggestions with:
+```
+AptiForge-1/
+├── backend/
+│   ├── app.py                 # Flask API + serves UI
+│   ├── resume_parser.py       # PDF/DOCX/TXT skill extraction
+│   ├── github_parser.py       # GitHub profile analysis
+│   ├── project_recommender.py # Ranking + roadmap export
+│   ├── requirements.txt
+│   └── utils/text_cleaner.py
+├── frontend/
+│   ├── index.html             # Primary web UI
+│   └── streamlit_app.py       # Optional Streamlit UI
+├── data/
+│   └── project_ideas.json     # Project catalog
+└── resume_sample.txt
+```
 
-Recommended tech stack
+## Setup
 
-Difficulty level
+```bash
+cd backend
+python -m venv ../.venv
 
-Explanation of why it fits you
+# Windows
+..\.venv\Scripts\activate
 
-Save or export recommended projects to a personalized roadmap
+# macOS / Linux
+# source ../.venv/bin/activate
 
-🧠 Tech Stack
-Backend: Flask, Pinecone, OpenAI Embeddings, PyGithub, pdfminer, spaCy
+pip install -r requirements.txt
+copy ..\.env.example ..\.env   # optional: set GITHUB_TOKEN
+```
 
-AI: Sentence Transformers / OpenAI for semantic understanding
+## Run
 
-Frontend: Streamlit (or React, depending on version)
+```bash
+cd backend
+python app.py
+```
 
-Deployment: Render / HuggingFace Spaces / Vercel
+Open **http://127.0.0.1:5000/** for the UI.
 
-🚧 Status
-This project is currently in development. Contributions and feedback are welcome!
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/` | Web UI |
+| GET | `/api` | API info |
+| POST | `/upload_resume` | Extract skills from a resume file |
+| POST | `/analyze_resume` | Skills + optional GitHub/goals + recommendations |
+| POST | `/analyze_github` | JSON `{"username": "..."}` |
+| POST | `/recommend_projects` | JSON skills + learning goals |
+| POST | `/export_roadmap` | JSON projects → roadmap Markdown/JSON |
 
+### Optional Streamlit UI
 
+Requires `streamlit` (may need a separate install if wheels are unavailable on your platform):
 
+```bash
+pip install streamlit
+streamlit run frontend/streamlit_app.py
+```
 
+## Quick tests (API must be running)
 
+```bash
+python data/test_upload.py
+python data/test_analyze.py
+python data/test_recommend.py
+```
 
+## Tech stack
+
+- **Backend:** Flask, Flask-CORS, requests, pypdf, python-docx
+- **Ranking:** skill intersection + scikit-learn TF-IDF cosine similarity
+- **Frontend:** HTML/CSS/JS served by Flask (Streamlit optional)
+- **Optional env:** `GITHUB_TOKEN` (see `.env.example`)
+
+## Status
+
+Core MVP is end-to-end: parse → recommend → export. Contributions welcome.

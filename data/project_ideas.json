@@ -1,26 +1,110 @@
 [
   {
+    "id": "flask-rest-api",
     "title": "Flask REST API",
-    "tags": ["python", "flask", "api"],
+    "tags": ["python", "flask", "api", "rest"],
+    "tech_stack": ["Python", "Flask", "Postman"],
     "difficulty": "beginner",
-    "description": "Build a to-do app backend using Flask and Postman."
+    "description": "Build a to-do app backend using Flask and Postman.",
+    "learning_focus": "backend api rest flask python"
   },
   {
+    "id": "fastapi-ml-deploy",
     "title": "Deploy ML Model with FastAPI",
-    "tags": ["python", "fastapi", "docker", "ml"],
+    "tags": ["python", "fastapi", "docker", "machine learning", "ml"],
+    "tech_stack": ["Python", "FastAPI", "Docker", "scikit-learn"],
     "difficulty": "intermediate",
-    "description": "Train a model and expose it as a REST API using FastAPI and Docker."
+    "description": "Train a model and expose it as a REST API using FastAPI and Docker.",
+    "learning_focus": "machine learning mlops docker api deployment"
   },
   {
+    "id": "github-actions-cicd",
     "title": "CI/CD with GitHub Actions",
-    "tags": ["git", "ci/cd", "github"],
+    "tags": ["git", "ci/cd", "github", "python", "flask"],
+    "tech_stack": ["GitHub Actions", "Flask", "pytest"],
     "difficulty": "intermediate",
-    "description": "Set up automated tests and deployment for a Flask app."
+    "description": "Set up automated tests and deployment for a Flask app.",
+    "learning_focus": "devops ci cd github automation testing"
   },
   {
+    "id": "personal-portfolio",
     "title": "Build a Personal Portfolio",
     "tags": ["html", "css", "javascript", "react"],
+    "tech_stack": ["React", "HTML", "CSS", "GitHub Pages"],
     "difficulty": "beginner",
-    "description": "Make a portfolio site using React and host it with GitHub Pages."
+    "description": "Make a portfolio site using React and host it with GitHub Pages.",
+    "learning_focus": "frontend react portfolio javascript css"
+  },
+  {
+    "id": "go-backend-service",
+    "title": "Go HTTP Microservice",
+    "tags": ["go", "api", "docker", "sql"],
+    "tech_stack": ["Go", "PostgreSQL", "Docker"],
+    "difficulty": "intermediate",
+    "description": "Build a small Go backend with REST endpoints, SQL storage, and Docker packaging.",
+    "learning_focus": "backend golang go microservice api database"
+  },
+  {
+    "id": "react-dashboard",
+    "title": "Interactive React Dashboard",
+    "tags": ["react", "javascript", "api", "css"],
+    "tech_stack": ["React", "Fetch API", "CSS"],
+    "difficulty": "intermediate",
+    "description": "Create a dashboard that visualizes live API data with filters and charts.",
+    "learning_focus": "frontend react visualization javascript ui"
+  },
+  {
+    "id": "django-blog",
+    "title": "Django Blog with Auth",
+    "tags": ["python", "django", "sql", "html"],
+    "tech_stack": ["Django", "SQLite", "HTML"],
+    "difficulty": "beginner",
+    "description": "Ship a blog with user auth, CRUD posts, and simple templates.",
+    "learning_focus": "backend django auth orm python web"
+  },
+  {
+    "id": "aws-serverless-notes",
+    "title": "Serverless Notes on AWS",
+    "tags": ["aws", "python", "api", "javascript"],
+    "tech_stack": ["AWS Lambda", "API Gateway", "DynamoDB"],
+    "difficulty": "advanced",
+    "description": "Build a notes API on Lambda and call it from a small web UI.",
+    "learning_focus": "cloud aws serverless backend api"
+  },
+  {
+    "id": "node-chat-socket",
+    "title": "Realtime Chat with Node.js",
+    "tags": ["node.js", "javascript", "api"],
+    "tech_stack": ["Node.js", "Socket.IO", "Express"],
+    "difficulty": "intermediate",
+    "description": "Create a realtime chat room with WebSockets and Express.",
+    "learning_focus": "backend realtime websockets node javascript"
+  },
+  {
+    "id": "kubernetes-demo-app",
+    "title": "Containerize and Deploy with Kubernetes",
+    "tags": ["docker", "kubernetes", "api", "python"],
+    "tech_stack": ["Docker", "Kubernetes", "Flask"],
+    "difficulty": "advanced",
+    "description": "Package a Flask service and deploy it to a local Kubernetes cluster.",
+    "learning_focus": "devops kubernetes docker containers deployment"
+  },
+  {
+    "id": "tensorflow-image-classifier",
+    "title": "Image Classifier with TensorFlow",
+    "tags": ["python", "tensorflow", "machine learning", "deep learning"],
+    "tech_stack": ["TensorFlow", "Python", "Notebooks"],
+    "difficulty": "intermediate",
+    "description": "Train and evaluate an image classifier, then document results.",
+    "learning_focus": "machine learning deep learning tensorflow computer vision"
+  },
+  {
+    "id": "mongodb-task-tracker",
+    "title": "Task Tracker with MongoDB",
+    "tags": ["javascript", "node.js", "mongodb", "api"],
+    "tech_stack": ["Node.js", "Express", "MongoDB"],
+    "difficulty": "beginner",
+    "description": "Build a CRUD task tracker backed by MongoDB.",
+    "learning_focus": "backend nosql mongodb node api"
   }
 ]

@@ -1,52 +1,161 @@
+"""AptiForge Flask API + web UI."""
+
+from __future__ import annotations
+
+import os
 import traceback
-from flask import Flask, request, jsonify
-from project_recommender import recommend_projects
-from resume_parser import extract_skills
+
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import CORS
+
+from github_parser import analyze_github_profile
+from project_recommender import (
+    build_roadmap,
+    export_roadmap_markdown,
+    recommend_projects,
+)
+from resume_parser import extract_skills, read_resume_bytes
+
+load_dotenv()
+
+FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
 
 app = Flask(__name__)
+CORS(app)
 
-# ✅ Optional: Add a simple GET homepage route
-@app.route('/', methods=['GET'])
+
+@app.route("/", methods=["GET"])
 def home():
-    return "Welcome to AptiForge API"
+    index_path = os.path.join(FRONTEND_DIR, "index.html")
+    if os.path.isfile(index_path):
+        return send_from_directory(FRONTEND_DIR, "index.html")
+    return jsonify(
+        {
+            "name": "AptiForge API",
+            "status": "ok",
+            "endpoints": [
+                "POST /upload_resume",
+                "POST /analyze_resume",
+                "POST /analyze_github",
+                "POST /recommend_projects",
+                "POST /export_roadmap",
+            ],
+        }
+    )
 
-# ✅ The main analyze route
-@app.route('/analyze_resume', methods=['POST'])
-def analyze_resume():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file uploaded'}), 400
 
-    file = request.files['file']
-    resume_text = file.read().decode("utf-8")
+@app.route("/api", methods=["GET"])
+def api_info():
+    return jsonify(
+        {
+            "name": "AptiForge API",
+            "status": "ok",
+            "endpoints": [
+                "POST /upload_resume",
+                "POST /analyze_resume",
+                "POST /analyze_github",
+                "POST /recommend_projects",
+                "POST /export_roadmap",
+            ],
+        }
+    )
+
+
+@app.route("/upload_resume", methods=["POST"])
+def upload_resume():
+    if "file" not in request.files:
+        return jsonify({"error": "No file part in the request"}), 400
+
+    file = request.files["file"]
+    if not file.filename:
+        return jsonify({"error": "Empty filename"}), 400
 
     try:
-        print("📄 Resume Loaded:")
-        print(resume_text[:200])  # print first 200 chars for debug
-
+        resume_text = read_resume_bytes(file.filename, file.read())
         skills = extract_skills(resume_text)
-        print("✅ Skills Extracted:", skills)
+        return jsonify({"skills": skills, "chars_read": len(resume_text)})
+    except Exception:
+        traceback.print_exc()
+        return jsonify({"error": "Failed to parse resume"}), 500
 
-        projects = recommend_projects(skills)
-        print("✅ Projects Recommended:", [p["title"] for p in projects])
 
-        return jsonify({
-            'skills': skills,
-            'recommended_projects': projects
-        })
-    except Exception as e:
-        print("❌ Exception occurred:")
-        traceback.print_exc()  # <- This shows full error trace
-        return jsonify({'error': 'Internal server error'}), 500
+@app.route("/analyze_resume", methods=["POST"])
+def analyze_resume():
+    if "file" not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
 
-@app.route('/upload_resume', methods=['POST'])
-def upload_resume():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file part in the request"}), 400
-    file = request.files['file']  
-    resume_text = file.read().decode('utf-8')
-    skills = extract_skills(resume_text)
+    file = request.files["file"]
+    if not file.filename:
+        return jsonify({"error": "Empty filename"}), 400
 
-    return jsonify({"skills": skills})
+    learning_goals = request.form.get("learning_goals", "")
+    github_username = request.form.get("github_username", "").strip()
+    top_k = int(request.form.get("top_k", 5))
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    try:
+        resume_text = read_resume_bytes(file.filename, file.read())
+        skills = set(extract_skills(resume_text))
+
+        github = None
+        if github_username:
+            github = analyze_github_profile(github_username)
+            if not github.get("error"):
+                skills.update(github.get("skills", []))
+
+        skills_list = sorted(skills)
+        projects = recommend_projects(skills_list, learning_goals=learning_goals, top_k=top_k)
+
+        return jsonify(
+            {
+                "skills": skills_list,
+                "learning_goals": learning_goals,
+                "github": github,
+                "recommended_projects": projects,
+            }
+        )
+    except Exception:
+        traceback.print_exc()
+        return jsonify({"error": "Internal server error"}), 500
+
+
+@app.route("/analyze_github", methods=["POST"])
+def analyze_github():
+    payload = request.get_json(silent=True) or {}
+    username = payload.get("username") or request.form.get("username", "")
+    result = analyze_github_profile(username)
+    if result.get("error"):
+        return jsonify(result), 400
+    return jsonify(result)
+
+
+@app.route("/recommend_projects", methods=["POST"])
+def recommend_projects_route():
+    payload = request.get_json(silent=True) or {}
+    skills = payload.get("skills", [])
+    learning_goals = payload.get("learning_goals", "")
+    top_k = int(payload.get("top_k", 5))
+
+    projects = recommend_projects(skills, learning_goals=learning_goals, top_k=top_k)
+    return jsonify({"projects": projects, "count": len(projects)})
+
+
+@app.route("/export_roadmap", methods=["POST"])
+def export_roadmap():
+    payload = request.get_json(silent=True) or {}
+    projects = payload.get("projects", [])
+    title = payload.get("title", "My AptiForge Roadmap")
+    fmt = (payload.get("format") or "json").lower()
+
+    if not projects:
+        return jsonify({"error": "No projects provided"}), 400
+
+    roadmap = build_roadmap(projects, title=title)
+    if fmt == "markdown":
+        return jsonify({"format": "markdown", "content": export_roadmap_markdown(roadmap)})
+    return jsonify({"format": "json", "roadmap": roadmap})
+
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)

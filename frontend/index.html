@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AptiForge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a1f24;
+      --ink-soft: #3d4752;
+      --muted: #6b7683;
+      --paper: #f3efe6;
+      --paper-2: #e8e2d4;
+      --steel: #d7dfe8;
+      --line: #c8c2b4;
+      --ember: #c45c26;
+      --ember-deep: #9a3f12;
+      --forge: #1f6b5c;
+      --forge-soft: #d5ebe5;
+      --fit: #2a8f6e;
+      --danger: #b42318;
+      --shadow: 0 18px 50px rgba(26, 31, 36, 0.12);
+      --radius: 4px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Outfit", sans-serif;
+      color: var(--ink);
+      background-color: var(--paper);
+      background-image:
+        radial-gradient(ellipse 900px 420px at 8% -5%, rgba(196, 92, 38, 0.14), transparent 60%),
+        radial-gradient(ellipse 700px 380px at 95% 8%, rgba(31, 107, 92, 0.12), transparent 55%),
+        linear-gradient(rgba(26, 31, 36, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26, 31, 36, 0.035) 1px, transparent 1px),
+        linear-gradient(165deg, var(--paper) 0%, var(--paper-2) 100%);
+      background-size: auto, auto, 28px 28px, 28px 28px, auto;
+      overflow-x: hidden;
+    }
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.04;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 5rem;
+    }
+
+    /* —— Hero —— */
+    .hero {
+      padding: 1.5rem 0 2rem;
+      animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .brand {
+      font-family: "Syne", sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 9vw, 5.2rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      margin: 0;
+      background: linear-gradient(120deg, var(--ink) 30%, var(--ember) 70%, var(--forge) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: brandShine 8s ease-in-out infinite, rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .lede {
+      margin: 1rem 0 0;
+      max-width: 32rem;
+      color: var(--ink-soft);
+      font-size: 1.08rem;
+      line-height: 1.55;
+      animation: rise 1s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .spark {
+      display: inline-block;
+      width: 0.55rem;
+      height: 0.55rem;
+      margin-right: 0.45rem;
+      border-radius: 1px;
+      background: var(--ember);
+      transform: translateY(-0.15rem);
+      animation: pulseSpark 1.8s ease-in-out infinite;
+    }
+
+    /* —— Form —— */
+    .forge-form {
+      display: grid;
+      gap: 1.1rem;
+      margin-top: 2rem;
+      padding: 1.4rem 1.35rem 1.5rem;
+      border: 1px solid var(--line);
+      background: rgba(243, 239, 230, 0.82);
+      box-shadow: var(--shadow);
+      animation: rise 1.05s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .forge-form:focus-within {
+      border-color: color-mix(in srgb, var(--ember) 45%, var(--line));
+      box-shadow: var(--shadow), 0 0 0 3px rgba(196, 92, 38, 0.12);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    label,
+    .field {
+      display: grid;
+      gap: 0.45rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .field-label { color: var(--muted); }
+
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    .file-field {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+      color: var(--ink);
+      padding: 0.8rem 0.9rem;
+      font: inherit;
+      font-size: 1rem;
+      text-transform: none;
+      letter-spacing: normal;
+      font-weight: 400;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--forge);
+      transform: translateY(-1px);
+    }
+
+    textarea { min-height: 96px; resize: vertical; }
+
+    .file-field {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      min-height: 3rem;
+    }
+
+    .file-field strong {
+      color: var(--ember-deep);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .file-field span {
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-field input { display: none; }
+
+    .row {
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 720px) {
+      .row { grid-template-columns: 1.4fr 0.8fr; }
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      padding: 0.95rem 1.2rem;
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--ember) 0%, var(--ember-deep) 100%);
+      color: #fff8f2;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+      transform: translateX(-120%);
+      transition: transform 0.55s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(196, 92, 38, 0.28);
+    }
+
+    .btn-primary:hover::after { transform: translateX(120%); }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: wait;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--forge);
+      color: var(--forge);
+      transform: translateY(-1px);
+    }
+
+    .error {
+      color: var(--danger);
+      font-size: 0.95rem;
+      margin: 0;
+      animation: shake 0.4s ease;
+    }
+
+    /* —— Loading forge —— */
+    .forge-status {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      border: 1px dashed var(--line);
+      background: rgba(255, 253, 248, 0.7);
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .forge-status.is-on { display: flex; animation: rise 0.35s ease both; }
+
+    .anvil {
+      width: 42px;
+      height: 42px;
+      border: 3px solid var(--ember);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .forge-status p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+
+    /* —— Results —— */
+    .results {
+      margin-top: 2.75rem;
+      display: none;
+    }
+
+    .results.is-visible { display: block; }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin: 0 0 1.1rem;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .results.is-visible .section-head {
+      animation: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .section-head h2 {
+      font-family: "Syne", sans-serif;
+      font-size: clamp(1.5rem, 3vw, 1.9rem);
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .skills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 2rem;
+    }
+
+    .skill {
+      padding: 0.4rem 0.7rem;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+      color: var(--forge);
+      font-size: 0.88rem;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(10px) scale(0.96);
+    }
+
+    .results.is-visible .skill {
+      animation: popIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .github-note {
+      margin: -1.2rem 0 2rem;
+      color: var(--ink-soft);
+      line-height: 1.5;
+      opacity: 0;
+    }
+
+    .results.is-visible .github-note {
+      animation: rise 0.6s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .project-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .project {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1rem 1.15rem;
+      padding: 1.25rem 1.2rem;
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, #fffdf8 0%, #f6f1e6 100%);
+      box-shadow: 0 10px 30px rgba(26, 31, 36, 0.06);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .results.is-visible .project {
+      animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .project:hover {
+      transform: translateY(-4px);
+      border-color: color-mix(in srgb, var(--forge) 40%, var(--line));
+      box-shadow: 0 16px 36px rgba(26, 31, 36, 0.1);
+    }
+
+    .rank {
+      width: 3.1rem;
+      height: 3.1rem;
+      display: grid;
+      place-items: center;
+      font-family: "Syne", sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--ember-deep);
+      background: var(--forge-soft);
+      border: 1px solid color-mix(in srgb, var(--forge) 30%, var(--line));
+    }
+
+    .project-body { min-width: 0; }
+
+    .project-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .project-top h3 {
+      margin: 0;
+      font-family: "Syne", sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .difficulty {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ember-deep);
+    }
+
+    .difficulty[data-level="beginner"] { color: var(--forge); }
+    .difficulty[data-level="intermediate"] { color: var(--ember); }
+    .difficulty[data-level="advanced"] { color: var(--ember-deep); }
+
+    .desc {
+      margin: 0.35rem 0 0.85rem;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    .why {
+      margin: 0;
+      padding: 0.7rem 0.8rem;
+      background: rgba(31, 107, 92, 0.08);
+      border-left: 3px solid var(--forge);
+      color: var(--ink);
+      line-height: 1.45;
+      font-size: 0.95rem;
+    }
+
+    .why strong { color: var(--forge); }
+
+    .stack-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.85rem;
+    }
+
+    .stack-item {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      border-bottom: 1px solid var(--line);
+      padding: 0.1rem 0;
+    }
+
+    .fit {
+      margin-top: 0.95rem;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .fit-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .fit-track {
+      height: 6px;
+      background: var(--steel);
+      overflow: hidden;
+    }
+
+    .fit-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--forge), var(--ember));
+      transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1.5rem;
+      opacity: 0;
+    }
+
+    .results.is-visible .actions {
+      animation: rise 0.55s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .empty {
+      padding: 1.5rem;
+      border: 1px dashed var(--line);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes brandShine {
+      0%, 100% { background-position: 0% center; }
+      50% { background-position: 100% center; }
+    }
+
+    @keyframes pulseSpark {
+      0%, 100% { opacity: 1; transform: translateY(-0.15rem) scale(1); }
+      50% { opacity: 0.45; transform: translateY(-0.15rem) scale(0.75); }
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <main>
+    <header class="hero">
+      <h1 class="brand">AptiForge</h1>
+      <p class="lede">
+        <span class="spark" aria-hidden="true"></span>
+        Discover coding projects forged from your resume, GitHub activity, and learning goals — then export a personal roadmap.
+      </p>
+    </header>
+
+    <form class="forge-form" id="forge-form">
+      <div class="field">
+        <span class="field-label">Resume</span>
+        <label class="file-field" for="resume">
+          <strong>Choose file</strong>
+          <span id="file-name">PDF, DOCX, or TXT</span>
+          <input id="resume" type="file" accept=".pdf,.docx,.txt,text/plain" />
+        </label>
+      </div>
+
+      <div class="row">
+        <label>
+          GitHub username
+          <input id="github" type="text" placeholder="octocat" autocomplete="username" />
+        </label>
+        <label>
+          Recommendations
+          <input id="top_k" type="number" min="1" max="8" value="5" />
+        </label>
+      </div>
+
+      <label>
+        Learning goals
+        <textarea id="goals" placeholder="I want to learn backend with Go and Docker"></textarea>
+      </label>
+
+      <button class="btn btn-primary" type="submit" id="submit-btn">Forge my recommendations</button>
+      <p class="error" id="error" hidden></p>
+    </form>
+
+    <div class="forge-status" id="forge-status" aria-live="polite">
+      <div class="anvil" aria-hidden="true"></div>
+      <p id="status-text">Heating the forge… extracting skills and ranking projects.</p>
+    </div>
+
+    <section class="results" id="results" aria-live="polite">
+      <div class="section-head">
+        <div>
+          <h2>Your skill profile</h2>
+          <p id="skills-count">Detected from your inputs</p>
+        </div>
+      </div>
+      <div class="skills-wrap" id="skills"></div>
+      <p class="github-note" id="github-summary"></p>
+
+      <div class="section-head">
+        <div>
+          <h2>Recommended projects</h2>
+          <p>Ranked by skill overlap and goal fit</p>
+        </div>
+      </div>
+      <div class="project-list" id="projects"></div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" id="dl-md">Download roadmap (.md)</button>
+        <button type="button" class="btn btn-ghost" id="dl-json">Download roadmap (.json)</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let lastProjects = [];
+
+    const form = document.getElementById("forge-form");
+    const errorEl = document.getElementById("error");
+    const btn = document.getElementById("submit-btn");
+    const statusEl = document.getElementById("forge-status");
+    const resultsEl = document.getElementById("results");
+    const fileInput = document.getElementById("resume");
+    const fileName = document.getElementById("file-name");
+
+    const STATUS_LINES = [
+      "Heating the forge… extracting skills and ranking projects.",
+      "Reading your stack… tempering matches.",
+      "Aligning learning goals with project sparks…",
+    ];
+
+    fileInput.addEventListener("change", () => {
+      fileName.textContent = fileInput.files[0]?.name || "PDF, DOCX, or TXT";
+    });
+
+    function showError(msg) {
+      errorEl.hidden = !msg;
+      errorEl.textContent = msg || "";
+    }
+
+    function setLoading(on) {
+      statusEl.classList.toggle("is-on", on);
+      if (on) {
+        let i = 0;
+        document.getElementById("status-text").textContent = STATUS_LINES[0];
+        statusEl._timer = setInterval(() => {
+          i = (i + 1) % STATUS_LINES.length;
+          document.getElementById("status-text").textContent = STATUS_LINES[i];
+        }, 1600);
+      } else if (statusEl._timer) {
+        clearInterval(statusEl._timer);
+        statusEl._timer = null;
+      }
+    }
+
+    function download(filename, content, mime) {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function fitPercent(score, maxScore) {
+      if (!maxScore) return 35;
+      return Math.max(18, Math.min(100, Math.round((Number(score) / maxScore) * 100)));
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      showError("");
+      resultsEl.classList.remove("is-visible");
+      btn.disabled = true;
+      btn.textContent = "Forging…";
+      setLoading(true);
+
+      const file = fileInput.files[0];
+      const github = document.getElementById("github").value.trim();
+      const goals = document.getElementById("goals").value.trim();
+      const topK = document.getElementById("top_k").value.trim() || "5";
+
+      try {
+        let data;
+        if (file) {
+          const body = new FormData();
+          body.append("file", file);
+          body.append("learning_goals", goals);
+          body.append("github_username", github);
+          body.append("top_k", topK);
+          const res = await fetch("/analyze_resume", { method: "POST", body });
+          data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Analyze failed");
+        } else {
+          let skills = [];
+          let githubInfo = null;
+          if (github) {
+            const gRes = await fetch("/analyze_github", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username: github }),
+            });
+            githubInfo = await gRes.json();
+            if (!gRes.ok) throw new Error(githubInfo.error || "GitHub analyze failed");
+            skills = githubInfo.skills || [];
+          }
+          const res = await fetch("/recommend_projects", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ skills, learning_goals: goals, top_k: Number(topK) }),
+          });
+          const payload = await res.json();
+          if (!res.ok) throw new Error(payload.error || "Recommend failed");
+          data = {
+            skills,
+            github: githubInfo,
+            recommended_projects: payload.projects || [],
+          };
+        }
+
+        lastProjects = data.recommended_projects || [];
+        renderSkills(data.skills || [], data.github);
+        renderProjects(lastProjects);
+        resultsEl.classList.add("is-visible");
+        requestAnimationFrame(() => {
+          document.querySelectorAll(".fit-fill").forEach((el) => {
+            el.style.width = el.dataset.width || "0%";
+          });
+        });
+        resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (err) {
+        showError(err.message || String(err));
+      } finally {
+        setLoading(false);
+        btn.disabled = false;
+        btn.textContent = "Forge my recommendations";
+      }
+    });
+
+    function renderSkills(skills, github) {
+      const skillsEl = document.getElementById("skills");
+      const ghEl = document.getElementById("github-summary");
+      const countEl = document.getElementById("skills-count");
+
+      countEl.textContent = skills.length
+        ? `${skills.length} skill${skills.length === 1 ? "" : "s"} detected`
+        : "No skills detected yet — goals alone can still guide matches";
+
+      skillsEl.innerHTML = skills.length
+        ? skills
+            .map(
+              (s, i) =>
+                `<span class="skill" style="animation-delay:${0.05 + i * 0.04}s">${escapeHtml(s)}</span>`
+            )
+            .join("")
+        : `<span class="skill" style="animation-delay:0.05s;color:var(--muted)">Waiting for signal</span>`;
+
+      if (github && !github.error) {
+        ghEl.textContent = github.strengths || "";
+        ghEl.hidden = !github.strengths;
+      } else {
+        ghEl.textContent = "";
+        ghEl.hidden = true;
+      }
+    }
+
+    function renderProjects(projects) {
+      const el = document.getElementById("projects");
+      if (!projects.length) {
+        el.innerHTML = `<div class="empty">No projects recommended yet. Add a resume, GitHub username, or learning goals.</div>`;
+        return;
+      }
+
+      const maxScore = Math.max(...projects.map((p) => Number(p.score) || 0), 1);
+
+      el.innerHTML = projects
+        .map((p, i) => {
+          const stack = p.recommended_tech_stack || p.tech_stack || [];
+          const pct = fitPercent(p.score, maxScore);
+          const delay = 0.18 + i * 0.1;
+          return `
+            <article class="project" style="animation-delay:${delay}s">
+              <div class="rank">0${i + 1}</div>
+              <div class="project-body">
+                <div class="project-top">
+                  <h3>${escapeHtml(p.title || "")}</h3>
+                  <span class="difficulty" data-level="${escapeHtml((p.difficulty || "").toLowerCase())}">${escapeHtml(p.difficulty || "")}</span>
+                </div>
+                <p class="desc">${escapeHtml(p.description || "")}</p>
+                <p class="why"><strong>Why it fits</strong> — ${escapeHtml(p.why || "")}</p>
+                <div class="stack-row">
+                  ${stack.map((t) => `<span class="stack-item">${escapeHtml(t)}</span>`).join("")}
+                </div>
+                <div class="fit">
+                  <div class="fit-label"><span>Match strength</span><span>${pct}%</span></div>
+                  <div class="fit-track"><div class="fit-fill" data-width="${pct}%"></div></div>
+                </div>
+              </div>
+            </article>`;
+        })
+        .join("");
+    }
+
+    document.getElementById("dl-md").addEventListener("click", async () => {
+      if (!lastProjects.length) return;
+      const res = await fetch("/export_roadmap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projects: lastProjects, format: "markdown" }),
+      });
+      const data = await res.json();
+      download("aptiforge_roadmap.md", data.content || "", "text/markdown");
+    });
+
+    document.getElementById("dl-json").addEventListener("click", async () => {
+      if (!lastProjects.length) return;
+      const res = await fetch("/export_roadmap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projects: lastProjects, format: "json" }),
+      });
+      const data = await res.json();
+      download(
+        "aptiforge_roadmap.json",
+        JSON.stringify(data.roadmap, null, 2),
+        "application/json"
+      );
+    });
+  </script>
+</body>
+</html>

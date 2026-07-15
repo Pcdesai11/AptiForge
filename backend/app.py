@@ -65,6 +65,7 @@ def _api_payload() -> dict:
             "pinecone": pinecone_enabled(),
         },
         "endpoints": [
+            "GET /sample_resume",
             "POST /upload_resume",
             "POST /analyze_resume",
             "POST /analyze_github",
@@ -78,6 +79,23 @@ def _api_payload() -> dict:
 @app.route("/api", methods=["GET"])
 def api_info():
     return jsonify(_api_payload())
+
+
+@app.route("/sample_resume", methods=["GET"])
+def sample_resume():
+    """Serve the bundled sample resume for one-click demos."""
+    sample_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "resume_sample.txt")
+    )
+    if not os.path.isfile(sample_path):
+        return jsonify({"error": "Sample resume not found"}), 404
+    return send_from_directory(
+        os.path.dirname(sample_path),
+        os.path.basename(sample_path),
+        mimetype="text/plain",
+        as_attachment=False,
+        download_name="resume_sample.txt",
+    )
 
 
 @app.route("/upload_resume", methods=["POST"])

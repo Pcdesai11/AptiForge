@@ -308,6 +308,13 @@
     .file-field span { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .file-field input { display: none; }
 
+    #sample-resume-btn {
+      justify-self: start;
+      margin-top: 0.35rem;
+      padding: 0.55rem 0.85rem;
+      font-size: 0.85rem;
+    }
+
     .row { display: grid; gap: 1rem; }
     @media (min-width: 720px) {
       .row { grid-template-columns: 1.4fr 0.8fr; }
@@ -930,6 +937,7 @@
           <span id="file-name">PDF, DOCX, or TXT</span>
           <input id="resume" type="file" accept=".pdf,.docx,.txt,text/plain" />
         </label>
+        <button type="button" class="btn btn-ghost" id="sample-resume-btn">Try sample resume</button>
       </div>
 
       <div class="row">
@@ -1068,6 +1076,27 @@
 
     fileInput.addEventListener("change", () => {
       fileName.textContent = fileInput.files[0]?.name || "PDF, DOCX, or TXT";
+    });
+
+    document.getElementById("sample-resume-btn").addEventListener("click", async () => {
+      try {
+        const res = await fetch("/sample_resume");
+        if (!res.ok) throw new Error("Could not load sample resume");
+        const text = await res.text();
+        const file = new File([text], "resume_sample.txt", { type: "text/plain" });
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+        fileName.textContent = "resume_sample.txt (sample)";
+        const goals = document.getElementById("goals");
+        if (!goals.value.trim()) {
+          goals.value = "I want to get better at Docker, APIs, and cloud deployment";
+        }
+        showError("");
+        form.requestSubmit();
+      } catch (err) {
+        showError(err.message || "Failed to load sample resume");
+      }
     });
 
     function seedEmbers() {

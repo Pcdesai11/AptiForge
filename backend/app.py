@@ -48,6 +48,17 @@ def _parse_use_ai(raw) -> bool:
     return str(raw).strip().lower() not in {"0", "false", "no", "off"}
 
 
+def _parse_tracks(raw) -> list[str]:
+    """Normalize API/form track input into a list."""
+    if raw is None:
+        return []
+    if isinstance(raw, str):
+        return [item.strip() for item in raw.split(",") if item.strip()]
+    if isinstance(raw, (list, tuple, set)):
+        return [str(item).strip() for item in raw if str(item).strip()]
+    return []
+
+
 @app.route("/", methods=["GET"])
 def home():
     index_path = os.path.join(FRONTEND_DIR, "index.html")
@@ -131,6 +142,8 @@ def analyze_resume():
     if top_k_error:
         return top_k_error
     use_ai = _parse_use_ai(request.form.get("use_ai", "true"))
+    fit_mode = request.form.get("fit_mode", "balanced")
+    tracks = _parse_tracks(request.form.getlist("tracks") or request.form.get("tracks"))
 
     try:
         resume_text = read_resume_bytes(file.filename, file.read())
@@ -148,6 +161,8 @@ def analyze_resume():
             learning_goals=learning_goals,
             top_k=top_k,
             use_ai=use_ai,
+            fit_mode=fit_mode,
+            tracks=tracks,
         )
 
         return jsonify(
@@ -187,12 +202,16 @@ def recommend_projects_route():
     if top_k_error:
         return top_k_error
     use_ai = _parse_use_ai(payload.get("use_ai", True))
+    fit_mode = payload.get("fit_mode", "balanced")
+    tracks = _parse_tracks(payload.get("tracks"))
 
     projects = recommend_projects(
         skills,
         learning_goals=learning_goals,
         top_k=top_k,
         use_ai=use_ai,
+        fit_mode=fit_mode,
+        tracks=tracks,
     )
     return jsonify(
         {

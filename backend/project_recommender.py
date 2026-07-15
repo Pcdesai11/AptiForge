@@ -27,6 +27,8 @@ def recommend_projects(
     learning_goals: str = "",
     top_k: int = 5,
     use_ai: bool = True,
+    fit_mode: str = "balanced",
+    tracks: list[str] | None = None,
 ) -> list[dict]:
     """
     Rank catalog projects with skill overlap + semantic similarity.
@@ -34,6 +36,18 @@ def recommend_projects(
     """
     user_skills = [s.lower() for s in (user_skills or [])]
     projects = load_projects()
+    selected_tracks = {
+        str(track).strip().lower() for track in (tracks or []) if str(track).strip()
+    }
+    if selected_tracks:
+        projects = [
+            project
+            for project in projects
+            if str(project.get("track", "")).strip().lower() in selected_tracks
+        ]
+    fit_mode = str(fit_mode or "balanced").strip().lower()
+    if fit_mode not in {"balanced", "comfort", "stretch"}:
+        fit_mode = "balanced"
     goals_clean = clean_text(learning_goals)
 
     sem_scores, sem_source = semantic_scores(user_skills, learning_goals, projects)
@@ -49,9 +63,22 @@ def recommend_projects(
 
         # Skills count for ranking; semantic similarity boosts goal/content fit
         total = skill_score * 2.0 + goal_score * 4.0
+        difficulty = str(project.get("difficulty", "")).lower()
+        if fit_mode == "comfort" and difficulty == "beginner":
+            total += 1.25
+        elif fit_mode == "stretch":
+            if difficulty == "advanced":
+                total += 1.25
+            elif difficulty == "intermediate":
+                total += 0.75
 
         if total == 0 and not user_skills and not goals_clean:
-            total = 0.1 if project.get("difficulty") == "beginner" else 0.0
+            if fit_mode == "comfort":
+                total = 0.2 if difficulty == "beginner" else 0.0
+            elif fit_mode == "stretch":
+                total = 0.2 if difficulty in {"intermediate", "advanced"} else 0.0
+            else:
+                total = 0.1 if difficulty == "beginner" else 0.0
 
         if total <= 0:
             continue
@@ -86,8 +113,13 @@ def recommend_projects(
 
     # Soft catalog fallback when no overlaps at all
     if not results:
-        beginners = [p for p in projects if p.get("difficulty") == "beginner"] or projects
-        for p in beginners[:top_k]:
+        if fit_mode == "stretch":
+            fallback = [
+                p for p in projects if str(p.get("difficulty", "")).lower() in {"intermediate", "advanced"}
+            ] or projects
+        else:
+            fallback = [p for p in projects if p.get("difficulty") == "beginner"] or projects
+        for p in fallback[:top_k]:
             results.append(
                 {
                     **p,
@@ -125,6 +157,8 @@ def build_roadmap(projects: list[dict], title: str = "My AptiForge Roadmap") -> 
                 "order": i,
                 "title": project.get("title"),
                 "difficulty": project.get("difficulty"),
+                "track": project.get("track"),
+                "time_estimate": project.get("time_estimate"),
                 "tech_stack": project.get("recommended_tech_stack")
                 or project.get("tech_stack")
                 or project.get("tags", []),
@@ -157,6 +191,8 @@ def export_roadmap_markdown(roadmap: dict) -> str:
             [
                 f"## {step.get('order')}. {step.get('title')}{badge}",
                 f"- **Difficulty:** {step.get('difficulty')}",
+                f"- **Track:** {step.get('track') or 'Not specified'}",
+                f"- **Time estimate:** {step.get('time_estimate') or 'Not specified'}",
                 f"- **Tech stack:** {stack}",
                 f"- **Why it fits:** {step.get('why')}",
                 f"- **Description:** {step.get('description')}",

@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AptiForge</title>
+  <meta property="og:title" content="AptiForge" />
+  <meta property="og:description" content="Forge project recommendations from your skills, goals, and GitHub activity." />
+  <meta property="og:image" content="/og.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -234,6 +238,32 @@
       transform: translateY(-0.15rem);
       animation: pulseSpark 1.8s ease-in-out infinite;
       clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    .landing-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 1.5rem;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: 0 10px 28px rgba(26, 31, 36, 0.07);
+    }
+
+    .landing-step {
+      padding: 0.85rem 1rem;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .landing-step + .landing-step { border-left: 1px solid var(--line); }
+    .landing-step strong {
+      display: block;
+      margin-bottom: 0.15rem;
+      color: var(--forge);
+      font-family: "Syne", sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: -0.01em;
     }
 
     .forge-form {
@@ -852,7 +882,53 @@
 
     .compare-toggle { margin-top: 0.9rem; }
 
-    .comparison, .recent-runs {
+    .skill-gap {
+      margin: 0.85rem 0 0;
+      padding: 0.65rem 0.8rem;
+      border-left: 3px solid var(--ember);
+      background: rgba(196, 92, 38, 0.1);
+      color: var(--ink-soft);
+      line-height: 1.45;
+      font-size: 0.92rem;
+    }
+    .skill-gap strong { color: var(--ember-deep); }
+
+    .assist-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.9rem;
+    }
+    .btn-assist { padding: 0.55rem 0.75rem; font-size: 0.84rem; }
+    .assist-panel {
+      display: grid;
+      gap: 0.7rem;
+      margin-top: 0.9rem;
+      padding: 0.85rem;
+      border: 1px solid color-mix(in srgb, var(--forge) 35%, var(--line));
+      background: var(--forge-soft);
+      color: var(--ink);
+    }
+    .assist-panel[hidden] { display: none; }
+    .assist-panel h4 { margin: 0; font-family: "Syne", sans-serif; }
+    .assist-panel h5 { margin: 0.15rem 0 0; color: var(--forge); font-size: 0.85rem; }
+    .assist-panel ul { margin: 0; padding-left: 1.2rem; line-height: 1.5; }
+    .assist-panel pre {
+      max-height: 22rem;
+      margin: 0;
+      padding: 0.75rem;
+      overflow: auto;
+      background: var(--input);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font: 0.8rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
+      white-space: pre-wrap;
+    }
+    .assist-panel-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .assist-day { padding-top: 0.55rem; border-top: 1px solid color-mix(in srgb, var(--forge) 25%, var(--line)); }
+    .assist-day strong { color: var(--ember-deep); }
+
+    .comparison, .recent-runs, .usage {
       margin: 1.5rem 0;
       padding: 1rem;
       border: 1px solid var(--line);
@@ -891,6 +967,15 @@
     }
     .recent-run strong, .recent-run span { display: block; }
     .recent-run span { margin-top: 0.2rem; color: var(--muted); font-size: 0.85rem; }
+    .usage {
+      margin: 1.5rem 0 0;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .usage summary { cursor: pointer; color: var(--ink); font-weight: 700; }
+    .usage p { margin: 0.65rem 0 0; color: var(--muted); font-size: 0.88rem; }
+    .usage-list { margin: 0.6rem 0 0; padding-left: 1.2rem; color: var(--ink-soft); font-size: 0.88rem; }
 
     .actions {
       display: flex;
@@ -1005,6 +1090,8 @@
       .hero { padding-top: 3.8rem; }
       .theme-toggle { top: 0; left: 0; right: auto; }
       .brand { font-size: clamp(2.7rem, 16vw, 4rem); }
+      .landing-strip { grid-template-columns: 1fr; }
+      .landing-step + .landing-step { border-top: 1px solid var(--line); border-left: 0; }
       .forge-form, .project { padding: 1rem; }
       .project { grid-template-columns: 1fr; gap: 0.75rem; }
       .rank { width: 2.6rem; height: 2.6rem; }
@@ -1038,6 +1125,11 @@
         <span class="spark" aria-hidden="true"></span>
         Discover coding projects forged from your resume, GitHub activity, and learning goals — then export a personal roadmap.
       </p>
+      <div class="landing-strip" aria-label="How AptiForge works">
+        <div class="landing-step"><strong>01 · Bring your signal</strong>Upload a resume or use a demo profile.</div>
+        <div class="landing-step"><strong>02 · Find your fit</strong>Get personalized projects and skill gaps.</div>
+        <div class="landing-step"><strong>03 · Build with intent</strong>Export a practical roadmap when you are ready.</div>
+      </div>
     </header>
 
     <form class="forge-form" id="forge-form">
@@ -1120,6 +1212,12 @@
       <div class="recent-list" id="recent-list"></div>
     </section>
 
+    <details class="usage" id="usage">
+      <summary>Usage</summary>
+      <p id="usage-summary">Loading local usage…</p>
+      <ul class="usage-list" id="usage-list"></ul>
+    </details>
+
     <section class="results" id="results" aria-live="polite">
       <div class="reveal-banner" id="reveal-banner">
         <span class="spark" aria-hidden="true"></span>
@@ -1169,6 +1267,7 @@
     let lastProjects = [];
     let revealToken = 0;
     let selectedCompareIds = [];
+    window.__lastSkills = [];
 
     const form = document.getElementById("forge-form");
     const errorEl = document.getElementById("error");
@@ -1186,6 +1285,8 @@
     const comparisonBody = document.getElementById("comparison-body");
     const recentRunsEl = document.getElementById("recent-runs");
     const recentListEl = document.getElementById("recent-list");
+    const usageSummaryEl = document.getElementById("usage-summary");
+    const usageListEl = document.getElementById("usage-list");
 
     const STATUS_LINES = [
       "Heating the forge… extracting skills.",
@@ -1220,6 +1321,7 @@
     syncThemeToggle();
     renderRecentRuns();
     restoreSharedRoadmap();
+    loadUsage();
 
     themeToggle.addEventListener("click", () => {
       const next =
@@ -1253,6 +1355,7 @@
         if (!goals.value.trim()) {
           goals.value = "I want to get better at Docker, APIs, and cloud deployment";
         }
+        trackEvent("sample_resume");
         showError("");
         form.requestSubmit();
       } catch (err) {
@@ -1311,6 +1414,30 @@
     function showError(msg) {
       errorEl.hidden = !msg;
       errorEl.textContent = msg || "";
+    }
+
+    function trackEvent(event) {
+      fetch("/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event }),
+      }).catch(() => {});
+    }
+
+    async function loadUsage() {
+      try {
+        const res = await fetch("/analytics");
+        if (!res.ok) throw new Error("usage unavailable");
+        const data = await res.json();
+        const events = Object.entries(data.events || {}).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        usageSummaryEl.textContent = data.total
+          ? `${data.total} local action${data.total === 1 ? "" : "s"} recorded.`
+          : "No local actions recorded yet.";
+        usageListEl.innerHTML = events.map(([name, count]) =>
+          `<li>${escapeHtml(name.replace(/_/g, " "))}: ${Number(count) || 0}</li>`).join("");
+      } catch (err) {
+        usageSummaryEl.textContent = "Usage data is unavailable right now.";
+      }
     }
 
     function setLoading(on) {
@@ -1439,6 +1566,7 @@
 
     async function showRecommendations(data, token, saveToHistory) {
       lastProjects = data.recommended_projects || [];
+      window.__lastSkills = Array.isArray(data.skills) ? data.skills : [];
       selectedCompareIds = [];
       updateComparison();
       resultsEl.classList.add("is-visible");
@@ -1560,6 +1688,7 @@
         setLoading(false);
         resultsEl.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
         await showRecommendations(data, token, true);
+        trackEvent("recommend_success");
       } catch (err) {
         showError(err.message || String(err));
         setLoading(false);
@@ -1635,6 +1764,7 @@
         else if (p.semantic_source === "tfidf") badges.push(`<span class="badge">Semantic TF-IDF</span>`);
         const key = projectKey(p);
         const completedMilestones = milestoneState(p);
+        const skillGaps = Array.isArray(p.skill_gaps) ? p.skill_gaps.filter(Boolean) : [];
         const milestones = (p.milestones || [])
           .map((m, index) => `<li><label class="milestone-check">
             <input type="checkbox" data-milestone="${index}" ${completedMilestones[index] ? "checked" : ""} />
@@ -1659,6 +1789,7 @@
               ${p.time_estimate ? `<span>Time: ${escapeHtml(p.time_estimate)}</span>` : ""}
             </div>
             <p class="why"><strong>Why it fits</strong> — <span class="why-text"></span></p>
+            ${skillGaps.length ? `<p class="skill-gap"><strong>Level up first:</strong> ${escapeHtml(skillGaps.join(", "))}</p>` : ""}
             ${milestones ? `<ul class="milestones">${milestones}</ul>` : ""}
             <div class="stack-row">
               ${stack.map((t) => `<span class="stack-item">${escapeHtml(t)}</span>`).join("")}
@@ -1671,6 +1802,12 @@
               <input type="checkbox" class="compare-input" ${selectedCompareIds.includes(key) ? "checked" : ""} />
               Compare (up to 3)
             </label>
+            <div class="assist-actions">
+              <button type="button" class="btn btn-ghost btn-assist" data-assist="interview">Interview tips</button>
+              <button type="button" class="btn btn-ghost btn-assist" data-assist="readme">README starter</button>
+              <button type="button" class="btn btn-ghost btn-assist" data-assist="weekly">Weekly plan</button>
+            </div>
+            <section class="assist-panel" hidden aria-live="polite"></section>
           </div>`;
         el.appendChild(article);
 
@@ -1752,6 +1889,7 @@
             return;
           }
           download("aptiforge_roadmap.md", data.content, "text/markdown");
+          trackEvent("export_md");
           return;
         }
         if (!data.roadmap) {
@@ -1763,6 +1901,7 @@
           JSON.stringify(data.roadmap, null, 2),
           "application/json"
         );
+        trackEvent("export_json");
       } catch (err) {
         showError(err.message || "Failed to export roadmap");
       }
@@ -1798,6 +1937,70 @@
       updateComparison();
     });
 
+    document.getElementById("projects").addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-assist]");
+      if (!button) return;
+      const article = button.closest(".project");
+      const project = lastProjects.find((item) => projectKey(item) === article?.dataset.projectKey);
+      if (!project) return;
+
+      const action = button.dataset.assist;
+      const panel = article.querySelector(".assist-panel");
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = "Preparing…";
+      panel.hidden = false;
+      panel.textContent = "Preparing project support…";
+      try {
+        const res = await fetch("/project_assist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action, project, skills: window.__lastSkills || [] }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Could not prepare project support");
+        renderAssist(panel, action, data, project);
+        trackEvent(`project_assist_${action}`);
+      } catch (err) {
+        panel.textContent = err.message || "Could not prepare project support.";
+      } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+    });
+
+    function renderAssist(panel, action, data, project) {
+      if (action === "interview") {
+        const points = (data.talking_points || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+        const questions = (data.common_questions || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+        panel.innerHTML = `<h4>Interview tips</h4><h5>Talking points</h5><ul>${points || "<li>Explain your choices and tradeoffs.</li>"}</ul>
+          <h5>Questions to rehearse</h5><ul>${questions || "<li>What did you learn?</li>"}</ul>`;
+        return;
+      }
+      if (action === "readme") {
+        const markdown = data.readme_markdown || "";
+        panel.innerHTML = `<h4>README starter</h4><pre></pre><div class="assist-panel-actions">
+          <button type="button" class="btn btn-ghost btn-assist" data-copy-readme>Copy</button>
+          <button type="button" class="btn btn-ghost btn-assist" data-download-readme>Download .md</button>
+        </div>`;
+        panel.querySelector("pre").textContent = markdown;
+        panel.querySelector("[data-copy-readme]").addEventListener("click", async (event) => {
+          try {
+            await navigator.clipboard.writeText(markdown);
+            event.currentTarget.textContent = "Copied";
+          } catch (err) { showError("Could not copy the README."); }
+        });
+        panel.querySelector("[data-download-readme]").addEventListener("click", () => {
+          const safeTitle = String(project.title || "project").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
+          download(`${safeTitle || "project"}-README.md`, markdown, "text/markdown");
+        });
+        return;
+      }
+      const days = (data.days || []).map((day) => `<div class="assist-day"><strong>Day ${escapeHtml(day.day)} · ${escapeHtml(day.focus || "Build")}</strong>
+        <ul>${(day.tasks || []).map((task) => `<li>${escapeHtml(task)}</li>`).join("")}</ul></div>`).join("");
+      panel.innerHTML = `<h4>Weekly plan</h4>${days || "<p>Break the project into a small, shippable slice each day.</p>"}`;
+    }
+
     document.getElementById("clear-compare").addEventListener("click", () => {
       selectedCompareIds = [];
       document.querySelectorAll(".compare-input").forEach((input) => { input.checked = false; });
@@ -1827,11 +2030,13 @@
         await navigator.clipboard.writeText(url);
         showError("");
         document.getElementById("share-roadmap").textContent = "Share link copied";
+        trackEvent("share_link");
         setTimeout(() => { document.getElementById("share-roadmap").textContent = "Copy share link"; }, 1800);
       } catch (err) {
         showError("Could not copy the share link. You can copy it from the address bar.");
         location.hash = `roadmap=${encodeRoadmap(lastProjects)}`;
       }
+      trackEvent("share_link");
     });
 
     document.getElementById("print-roadmap").addEventListener("click", () => {
@@ -1858,6 +2063,7 @@
       printWindow.document.close();
       printWindow.focus();
       printWindow.print();
+      trackEvent("export_pdf");
     });
   </script>
 </body>

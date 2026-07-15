@@ -273,6 +273,7 @@
 
     input[type="text"],
     input[type="number"],
+    select,
     textarea,
     .file-field {
       width: 100%;
@@ -288,7 +289,7 @@
       transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
     }
 
-    input:focus, textarea:focus {
+    input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--forge);
       transform: translateY(-1px);
@@ -387,6 +388,34 @@
 
     .ai-toggle input {
       margin-top: 0.2rem;
+      accent-color: var(--forge);
+    }
+
+    .track-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    .track-option, .compare-toggle, .milestone-check {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--ink-soft);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .track-option {
+      padding: 0.42rem 0.65rem;
+      border: 1px solid var(--line);
+      background: var(--input);
+    }
+
+    .track-option input, .compare-toggle input, .milestone-check input {
       accent-color: var(--forge);
     }
 
@@ -694,7 +723,7 @@
     .why strong { color: var(--forge); }
 
     .why-text.typing::after {
-      content: "▍
+      content: "▍";
       display: inline-block;
       width: 0.45rem;
       background: var(--ember);
@@ -800,10 +829,68 @@
 
     .milestones {
       margin: 0.75rem 0 0;
-      padding-left: 1.1rem;
+      padding: 0;
+      list-style: none;
       color: var(--ink-soft);
       line-height: 1.45;
     }
+
+    .milestones li + li { margin-top: 0.35rem; }
+    .milestone-check input:checked + span {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .project-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem 0.85rem;
+      margin-top: 0.65rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .compare-toggle { margin-top: 0.9rem; }
+
+    .comparison, .recent-runs {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .comparison[hidden], .recent-runs[hidden] { display: none; }
+    .comparison-head, .recent-runs-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+    .comparison h3, .recent-runs h2 { margin: 0; font-family: "Syne", sans-serif; }
+    .comparison-wrap { overflow-x: auto; }
+    .comparison-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    .comparison-table th, .comparison-table td {
+      padding: 0.6rem;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    .comparison-table th { color: var(--forge); background: var(--forge-soft); }
+    .recent-list { display: grid; gap: 0.55rem; }
+    .recent-run {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--line);
+      background: var(--input);
+      color: var(--ink);
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+    }
+    .recent-run strong, .recent-run span { display: block; }
+    .recent-run span { margin-top: 0.2rem; color: var(--muted); font-size: 0.85rem; }
 
     .actions {
       display: flex;
@@ -912,6 +999,30 @@
       }
       body.is-forging { animation: none; }
     }
+
+    @media (max-width: 600px) {
+      main { padding: 1.25rem 0.8rem 3rem; }
+      .hero { padding-top: 3.8rem; }
+      .theme-toggle { top: 0; left: 0; right: auto; }
+      .brand { font-size: clamp(2.7rem, 16vw, 4rem); }
+      .forge-form, .project { padding: 1rem; }
+      .project { grid-template-columns: 1fr; gap: 0.75rem; }
+      .rank { width: 2.6rem; height: 2.6rem; }
+      .bg-quote:nth-child(n+6) { display: none; }
+      .comparison-table, .comparison-table tbody, .comparison-table tr, .comparison-table td { display: block; }
+      .comparison-table thead { display: none; }
+      .comparison-table tr { margin-bottom: 0.75rem; border: 1px solid var(--line); }
+      .comparison-table td { border-width: 0 0 1px; }
+      .comparison-table td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 0.2rem;
+        color: var(--forge);
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    }
   </style>
 </head>
 <body>
@@ -951,6 +1062,26 @@
         </label>
       </div>
 
+      <div class="row">
+        <label>
+          Build preference
+          <select id="fit_mode">
+            <option value="balanced">Balanced</option>
+            <option value="comfort">Comfort</option>
+            <option value="stretch">Stretch</option>
+          </select>
+        </label>
+        <div class="field">
+          <span class="field-label">Tracks <small>(all by default)</small></span>
+          <div class="track-options" id="track-options">
+            <label class="track-option"><input type="checkbox" value="backend" /> Backend</label>
+            <label class="track-option"><input type="checkbox" value="frontend" /> Frontend</label>
+            <label class="track-option"><input type="checkbox" value="ml" /> ML</label>
+            <label class="track-option"><input type="checkbox" value="devops" /> DevOps</label>
+          </div>
+        </div>
+      </div>
+
       <label>
         Learning goals
         <textarea id="goals" placeholder="I want to learn backend with Go and Docker"></textarea>
@@ -981,6 +1112,14 @@
       </div>
     </div>
 
+    <section class="recent-runs" id="recent-runs" hidden>
+      <div class="recent-runs-head">
+        <h2>Recent runs</h2>
+        <button type="button" class="btn btn-ghost" id="clear-history">Clear</button>
+      </div>
+      <div class="recent-list" id="recent-list"></div>
+    </section>
+
     <section class="results" id="results" aria-live="polite">
       <div class="reveal-banner" id="reveal-banner">
         <span class="spark" aria-hidden="true"></span>
@@ -1004,9 +1143,24 @@
       </div>
       <div class="project-list" id="projects"></div>
 
+      <section class="comparison" id="comparison" hidden aria-live="polite">
+        <div class="comparison-head">
+          <h3>Compare projects</h3>
+          <button type="button" class="btn btn-ghost" id="clear-compare">Clear compare</button>
+        </div>
+        <div class="comparison-wrap">
+          <table class="comparison-table">
+            <thead><tr><th>Title</th><th>Difficulty</th><th>Track</th><th>Time</th><th>Stack</th><th>Score / fit</th></tr></thead>
+            <tbody id="comparison-body"></tbody>
+          </table>
+        </div>
+      </section>
+
       <div class="actions" id="actions">
         <button type="button" class="btn btn-ghost" id="dl-md">Download roadmap (.md)</button>
         <button type="button" class="btn btn-ghost" id="dl-json">Download roadmap (.json)</button>
+        <button type="button" class="btn btn-ghost" id="print-roadmap">Download roadmap (PDF)</button>
+        <button type="button" class="btn btn-ghost" id="share-roadmap">Copy share link</button>
       </div>
     </section>
   </main>
@@ -1014,6 +1168,7 @@
   <script>
     let lastProjects = [];
     let revealToken = 0;
+    let selectedCompareIds = [];
 
     const form = document.getElementById("forge-form");
     const errorEl = document.getElementById("error");
@@ -1027,6 +1182,10 @@
     const actionsEl = document.getElementById("actions");
     const themeToggle = document.getElementById("theme-toggle");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const comparisonEl = document.getElementById("comparison");
+    const comparisonBody = document.getElementById("comparison-body");
+    const recentRunsEl = document.getElementById("recent-runs");
+    const recentListEl = document.getElementById("recent-list");
 
     const STATUS_LINES = [
       "Heating the forge… extracting skills.",
@@ -1059,6 +1218,8 @@
     seedEmbers();
     seedQuotes();
     syncThemeToggle();
+    renderRecentRuns();
+    restoreSharedRoadmap();
 
     themeToggle.addEventListener("click", () => {
       const next =
@@ -1201,6 +1362,118 @@
       return Math.max(18, Math.min(100, Math.round((Number(score) / maxScore) * 100)));
     }
 
+    function projectKey(project) {
+      return String(project.id || project.title || "custom-project");
+    }
+
+    function milestoneState(project) {
+      try {
+        return JSON.parse(localStorage.getItem(`aptiforge-milestones:${projectKey(project)}`)) || [];
+      } catch (err) {
+        return [];
+      }
+    }
+
+    function saveMilestone(project, index, checked) {
+      const state = milestoneState(project);
+      state[index] = checked;
+      localStorage.setItem(`aptiforge-milestones:${projectKey(project)}`, JSON.stringify(state));
+    }
+
+    function updateComparison() {
+      const compared = selectedCompareIds
+        .map((id) => lastProjects.find((project) => projectKey(project) === id))
+        .filter(Boolean);
+      comparisonEl.hidden = !compared.length;
+      comparisonBody.innerHTML = compared.map((project) => {
+        const stack = project.recommended_tech_stack || project.tech_stack || [];
+        const score = Number(project.score);
+        return `<tr>
+          <td data-label="Title">${escapeHtml(project.title || "")}</td>
+          <td data-label="Difficulty">${escapeHtml(project.difficulty || "—")}</td>
+          <td data-label="Track">${escapeHtml(project.track || "—")}</td>
+          <td data-label="Time">${escapeHtml(project.time_estimate || "—")}</td>
+          <td data-label="Stack">${escapeHtml(stack.join(", ") || "—")}</td>
+          <td data-label="Score / fit">${Number.isFinite(score) ? score.toFixed(2) : "—"}</td>
+        </tr>`;
+      }).join("");
+    }
+
+    function historyRuns() {
+      try {
+        return JSON.parse(localStorage.getItem("aptiforge-recent-runs")) || [];
+      } catch (err) {
+        return [];
+      }
+    }
+
+    function saveRun(skills, goals, projects) {
+      const run = {
+        timestamp: new Date().toISOString(),
+        skills,
+        goals,
+        projects,
+        projects_summary: projects.map((project) => ({
+          id: project.id,
+          title: project.title,
+          difficulty: project.difficulty,
+          track: project.track,
+          time_estimate: project.time_estimate,
+        })),
+      };
+      localStorage.setItem("aptiforge-recent-runs", JSON.stringify([run, ...historyRuns()].slice(0, 10)));
+      renderRecentRuns();
+    }
+
+    function renderRecentRuns() {
+      const runs = historyRuns();
+      recentRunsEl.hidden = !runs.length;
+      recentListEl.innerHTML = runs.map((run, index) => {
+        const when = new Date(run.timestamp).toLocaleString();
+        const titles = (run.projects_summary || run.projects || []).map((project) => project.title).slice(0, 2).join(" · ");
+        return `<button type="button" class="recent-run" data-run-index="${index}">
+          <strong>${escapeHtml(when)}</strong><span>${escapeHtml(titles || "Saved roadmap")}</span>
+        </button>`;
+      }).join("");
+    }
+
+    async function showRecommendations(data, token, saveToHistory) {
+      lastProjects = data.recommended_projects || [];
+      selectedCompareIds = [];
+      updateComparison();
+      resultsEl.classList.add("is-visible");
+      document.getElementById("reveal-copy").textContent =
+        lastProjects.length === 1 ? "One project quenched and ready" : `${lastProjects.length} projects quenched and ready`;
+      await revealSkills(data.skills || [], data.github, token);
+      await revealProjects(lastProjects, token);
+      if (saveToHistory) saveRun(data.skills || [], document.getElementById("goals").value.trim(), lastProjects);
+    }
+
+    function encodeRoadmap(projects) {
+      return btoa(unescape(encodeURIComponent(JSON.stringify(projects))))
+        .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+    }
+
+    function decodeRoadmap(value) {
+      const base64 = value.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((value.length + 3) % 4);
+      return JSON.parse(decodeURIComponent(escape(atob(base64))));
+    }
+
+    async function restoreSharedRoadmap() {
+      const match = location.hash.match(/^#roadmap=([^&]+)$/);
+      if (!match) return;
+      try {
+        const projects = decodeRoadmap(match[1]);
+        if (!Array.isArray(projects) || !projects.length) throw new Error("empty roadmap");
+        revealToken += 1;
+        const token = revealToken;
+        await showRecommendations({ skills: [], recommended_projects: projects }, token, false);
+        resultsEl.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      } catch (err) {
+        showError("This share link is invalid or incomplete.");
+      }
+    }
+
     async function typeText(el, text, token) {
       const full = text || "";
       if (reduceMotion) {
@@ -1233,6 +1506,8 @@
       const goals = document.getElementById("goals").value.trim();
       const topK = document.getElementById("top_k").value.trim() || "5";
       const useAi = document.getElementById("use_ai").checked;
+      const fitMode = document.getElementById("fit_mode").value;
+      const tracks = [...document.querySelectorAll("#track-options input:checked")].map((input) => input.value);
 
       try {
         let data;
@@ -1243,6 +1518,8 @@
           body.append("github_username", github);
           body.append("top_k", topK);
           body.append("use_ai", useAi ? "true" : "false");
+          body.append("fit_mode", fitMode);
+          tracks.forEach((track) => body.append("tracks", track));
           const res = await fetch("/analyze_resume", { method: "POST", body });
           data = await res.json();
           if (!res.ok) throw new Error(data.error || "Analyze failed");
@@ -1267,6 +1544,8 @@
               learning_goals: goals,
               top_k: Number(topK),
               use_ai: useAi,
+              fit_mode: fitMode,
+              tracks,
             }),
           });
           const payload = await res.json();
@@ -1278,17 +1557,9 @@
           };
         }
 
-        lastProjects = data.recommended_projects || [];
         setLoading(false);
-        resultsEl.classList.add("is-visible");
-        document.getElementById("reveal-copy").textContent =
-          lastProjects.length === 1
-            ? "One project quenched and ready"
-            : `${lastProjects.length} projects quenched and ready`;
         resultsEl.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-
-        await revealSkills(data.skills || [], data.github, token);
-        await revealProjects(lastProjects, token);
+        await showRecommendations(data, token, true);
       } catch (err) {
         showError(err.message || String(err));
         setLoading(false);
@@ -1362,12 +1633,18 @@
         if (p.why_source === "anthropic") badges.push(`<span class="badge badge-ai">Claude why</span>`);
         if (p.semantic_source === "pinecone") badges.push(`<span class="badge">Pinecone</span>`);
         else if (p.semantic_source === "tfidf") badges.push(`<span class="badge">Semantic TF-IDF</span>`);
+        const key = projectKey(p);
+        const completedMilestones = milestoneState(p);
         const milestones = (p.milestones || [])
-          .map((m) => `<li>${escapeHtml(m)}</li>`)
+          .map((m, index) => `<li><label class="milestone-check">
+            <input type="checkbox" data-milestone="${index}" ${completedMilestones[index] ? "checked" : ""} />
+            <span>${escapeHtml(m)}</span>
+          </label></li>`)
           .join("");
 
         const article = document.createElement("article");
         article.className = "project";
+        article.dataset.projectKey = key;
         article.innerHTML = `
           <div class="rank">00</div>
           <div class="project-body">
@@ -1377,6 +1654,10 @@
             </div>
             ${badges.length ? `<div class="badges">${badges.join("")}</div>` : ""}
             <p class="desc">${escapeHtml(p.description || "")}</p>
+            <div class="project-meta">
+              ${p.track ? `<span>Track: ${escapeHtml(p.track)}</span>` : ""}
+              ${p.time_estimate ? `<span>Time: ${escapeHtml(p.time_estimate)}</span>` : ""}
+            </div>
             <p class="why"><strong>Why it fits</strong> — <span class="why-text"></span></p>
             ${milestones ? `<ul class="milestones">${milestones}</ul>` : ""}
             <div class="stack-row">
@@ -1386,6 +1667,10 @@
               <div class="fit-label"><span>Match strength</span><span class="pct-label">0%</span></div>
               <div class="fit-track"><div class="fit-fill" data-width="${pct}%"></div></div>
             </div>
+            <label class="compare-toggle">
+              <input type="checkbox" class="compare-input" ${selectedCompareIds.includes(key) ? "checked" : ""} />
+              Compare (up to 3)
+            </label>
           </div>`;
         el.appendChild(article);
 
@@ -1485,6 +1770,95 @@
 
     document.getElementById("dl-md").addEventListener("click", () => exportRoadmap("markdown"));
     document.getElementById("dl-json").addEventListener("click", () => exportRoadmap("json"));
+
+    document.getElementById("projects").addEventListener("change", (event) => {
+      const article = event.target.closest(".project");
+      if (!article) return;
+      const project = lastProjects.find((item) => projectKey(item) === article.dataset.projectKey);
+      if (!project) return;
+
+      if (event.target.matches("[data-milestone]")) {
+        saveMilestone(project, Number(event.target.dataset.milestone), event.target.checked);
+        return;
+      }
+      if (!event.target.matches(".compare-input")) return;
+
+      const key = projectKey(project);
+      if (event.target.checked) {
+        if (selectedCompareIds.length >= 3) {
+          event.target.checked = false;
+          showError("Compare up to three projects at a time.");
+          return;
+        }
+        selectedCompareIds.push(key);
+      } else {
+        selectedCompareIds = selectedCompareIds.filter((id) => id !== key);
+      }
+      showError("");
+      updateComparison();
+    });
+
+    document.getElementById("clear-compare").addEventListener("click", () => {
+      selectedCompareIds = [];
+      document.querySelectorAll(".compare-input").forEach((input) => { input.checked = false; });
+      updateComparison();
+    });
+
+    document.getElementById("clear-history").addEventListener("click", () => {
+      localStorage.removeItem("aptiforge-recent-runs");
+      renderRecentRuns();
+    });
+
+    recentListEl.addEventListener("click", async (event) => {
+      const button = event.target.closest(".recent-run");
+      if (!button) return;
+      const run = historyRuns()[Number(button.dataset.runIndex)];
+      if (!run || !Array.isArray(run.projects)) return;
+      document.getElementById("goals").value = run.goals || "";
+      revealToken += 1;
+      await showRecommendations({ skills: run.skills || [], recommended_projects: run.projects }, revealToken, false);
+      resultsEl.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    });
+
+    document.getElementById("share-roadmap").addEventListener("click", async () => {
+      if (!lastProjects.length) return;
+      const url = `${location.origin}${location.pathname}#roadmap=${encodeRoadmap(lastProjects)}`;
+      try {
+        await navigator.clipboard.writeText(url);
+        showError("");
+        document.getElementById("share-roadmap").textContent = "Share link copied";
+        setTimeout(() => { document.getElementById("share-roadmap").textContent = "Copy share link"; }, 1800);
+      } catch (err) {
+        showError("Could not copy the share link. You can copy it from the address bar.");
+        location.hash = `roadmap=${encodeRoadmap(lastProjects)}`;
+      }
+    });
+
+    document.getElementById("print-roadmap").addEventListener("click", () => {
+      if (!lastProjects.length) return;
+      const projects = lastProjects.map((project) => {
+        const stack = (project.recommended_tech_stack || project.tech_stack || []).join(", ");
+        const milestones = (project.milestones || []).map((milestone, index) => {
+          const done = milestoneState(project)[index] ? "✓" : "○";
+          return `<li>${done} ${escapeHtml(milestone)}</li>`;
+        }).join("");
+        return `<article><h2>${escapeHtml(project.title || "")}</h2>
+          <p><strong>${escapeHtml(project.difficulty || "Unspecified")}</strong> · ${escapeHtml(project.track || "No track")} · ${escapeHtml(project.time_estimate || "No estimate")}</p>
+          <p>${escapeHtml(project.description || "")}</p><p><strong>Stack:</strong> ${escapeHtml(stack)}</p>
+          ${milestones ? `<h3>Milestones</h3><ul>${milestones}</ul>` : ""}</article>`;
+      }).join("");
+      const printWindow = window.open("", "_blank", "noopener,noreferrer");
+      if (!printWindow) {
+        showError("Your browser blocked the print window. Allow pop-ups and try again.");
+        return;
+      }
+      printWindow.document.write(`<!doctype html><html><head><title>AptiForge Roadmap</title>
+        <style>body{font:16px system-ui,sans-serif;color:#1a1f24;margin:2rem;line-height:1.5}h1,h2{font-family:Georgia,serif}article{break-inside:avoid;border-bottom:1px solid #bbb;padding:0 0 1rem;margin-bottom:1rem}@media print{body{margin:1.5cm}}</style>
+        </head><body><h1>AptiForge Roadmap</h1><p>Generated ${escapeHtml(new Date().toLocaleDateString())}</p>${projects}</body></html>`);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+    });
   </script>
 </body>
 </html>

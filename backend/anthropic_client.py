@@ -155,6 +155,7 @@ Respond with ONLY valid JSON:
             "learning_focus": data.get("learning_focus") or "",
             "milestones": data.get("milestones") or [],
             "matched_skills": sorted(skill_set.intersection(set(stack_l + tags))),
+            "skill_gaps": sorted(set(stack_l + tags) - skill_set)[:6],
             "score": 0.0,
             "why": data.get("why") or "Custom project generated from your skills and goals.",
             "recommended_tech_stack": stack,

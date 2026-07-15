@@ -91,15 +91,20 @@ def recommend_projects(
         if not why_parts:
             why_parts.append("A solid next step based on available signals.")
 
+        stack = project.get("tech_stack", tags)
+        stack_l = [str(t).lower() for t in stack]
+        skill_gaps = sorted({*tags, *stack_l} - set(user_skills))
+
         enriched = {
             **project,
             "matched_skills": matched,
+            "skill_gaps": skill_gaps[:6],
             "score": round(total, 3),
             "semantic_score": round(goal_score, 3),
             "semantic_source": sem_source,
             "why": " ".join(why_parts),
             "why_source": "heuristic",
-            "recommended_tech_stack": project.get("tech_stack", tags),
+            "recommended_tech_stack": stack,
             "custom": False,
             "source": "catalog",
         }
@@ -124,6 +129,7 @@ def recommend_projects(
                 {
                     **p,
                     "matched_skills": [],
+                    "skill_gaps": [str(t).lower() for t in (p.get("tags") or [])][:6],
                     "score": 0.0,
                     "semantic_score": 0.0,
                     "semantic_source": sem_source,

@@ -806,31 +806,43 @@
         .join("");
     }
 
-    document.getElementById("dl-md").addEventListener("click", async () => {
+    async function exportRoadmap(format) {
       if (!lastProjects.length) return;
-      const res = await fetch("/export_roadmap", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projects: lastProjects, format: "markdown" }),
-      });
-      const data = await res.json();
-      download("aptiforge_roadmap.md", data.content || "", "text/markdown");
-    });
+      try {
+        const res = await fetch("/export_roadmap", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ projects: lastProjects, format }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          showError(data.error || `Failed to export roadmap (${res.status})`);
+          return;
+        }
+        if (format === "markdown") {
+          if (!data.content) {
+            showError("Export succeeded but no markdown content was returned.");
+            return;
+          }
+          download("aptiforge_roadmap.md", data.content, "text/markdown");
+          return;
+        }
+        if (!data.roadmap) {
+          showError("Export succeeded but no roadmap JSON was returned.");
+          return;
+        }
+        download(
+          "aptiforge_roadmap.json",
+          JSON.stringify(data.roadmap, null, 2),
+          "application/json"
+        );
+      } catch (err) {
+        showError(err.message || "Failed to export roadmap");
+      }
+    }
 
-    document.getElementById("dl-json").addEventListener("click", async () => {
-      if (!lastProjects.length) return;
-      const res = await fetch("/export_roadmap", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projects: lastProjects, format: "json" }),
-      });
-      const data = await res.json();
-      download(
-        "aptiforge_roadmap.json",
-        JSON.stringify(data.roadmap, null, 2),
-        "application/json"
-      );
-    });
+    document.getElementById("dl-md").addEventListener("click", () => exportRoadmap("markdown"));
+    document.getElementById("dl-json").addEventListener("click", () => exportRoadmap("json"));
   </script>
 </body>
 </html>

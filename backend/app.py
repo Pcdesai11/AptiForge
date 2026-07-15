@@ -25,6 +25,19 @@ app = Flask(__name__)
 CORS(app)
 
 
+def parse_top_k(raw, default: int = 5) -> tuple[int, tuple | None]:
+    """Parse top_k into an int in [1, 20]. Returns (value, error_response)."""
+    if raw is None or raw == "":
+        return default, None
+    try:
+        value = int(raw)
+    except (TypeError, ValueError):
+        return default, (jsonify({"error": "top_k must be an integer"}), 400)
+    if value < 1 or value > 20:
+        return default, (jsonify({"error": "top_k must be between 1 and 20"}), 400)
+    return value, None
+
+
 @app.route("/", methods=["GET"])
 def home():
     index_path = os.path.join(FRONTEND_DIR, "index.html")
@@ -91,7 +104,9 @@ def analyze_resume():
 
     learning_goals = request.form.get("learning_goals", "")
     github_username = request.form.get("github_username", "").strip()
-    top_k = int(request.form.get("top_k", 5))
+    top_k, top_k_error = parse_top_k(request.form.get("top_k", 5))
+    if top_k_error:
+        return top_k_error
 
     try:
         resume_text = read_resume_bytes(file.filename, file.read())
@@ -134,7 +149,9 @@ def recommend_projects_route():
     payload = request.get_json(silent=True) or {}
     skills = payload.get("skills", [])
     learning_goals = payload.get("learning_goals", "")
-    top_k = int(payload.get("top_k", 5))
+    top_k, top_k_error = parse_top_k(payload.get("top_k", 5))
+    if top_k_error:
+        return top_k_error
 
     projects = recommend_projects(skills, learning_goals=learning_goals, top_k=top_k)
     return jsonify({"projects": projects, "count": len(projects)})

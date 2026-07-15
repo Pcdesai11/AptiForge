@@ -36,10 +36,7 @@
       background-image:
         radial-gradient(ellipse 900px 420px at 8% -5%, rgba(196, 92, 38, 0.16), transparent 60%),
         radial-gradient(ellipse 700px 380px at 95% 8%, rgba(31, 107, 92, 0.14), transparent 55%),
-        linear-gradient(rgba(26, 31, 36, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(26, 31, 36, 0.035) 1px, transparent 1px),
         linear-gradient(165deg, var(--paper) 0%, var(--paper-2) 100%);
-      background-size: auto, auto, 28px 28px, 28px 28px, auto;
       overflow-x: hidden;
     }
 
@@ -47,7 +44,7 @@
       animation: heatPulse 2.4s ease-in-out infinite;
     }
 
-    .noise, .embers {
+    .noise, .embers, .quote-field {
       pointer-events: none;
       position: fixed;
       inset: 0;
@@ -59,6 +56,69 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
+    .quote-field {
+      overflow: hidden;
+    }
+
+    .bg-quote {
+      position: absolute;
+      max-width: min(280px, 42vw);
+      padding: 0.65rem 0.85rem;
+      font-family: "Syne", sans-serif;
+      font-size: clamp(0.72rem, 1.5vw, 0.95rem);
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      background: rgba(255, 253, 248, 0.18);
+      border: 1px solid transparent;
+      opacity: 0.14;
+      transform: rotate(var(--tilt, -4deg)) scale(0.98);
+      transition:
+        opacity 0.35s ease,
+        transform 0.35s ease,
+        background 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        color 0.35s ease;
+      pointer-events: auto;
+      cursor: default;
+      user-select: none;
+    }
+
+    .bg-quote:hover,
+    .bg-quote:focus-visible {
+      opacity: 1;
+      color: var(--ember-deep);
+      background: rgba(255, 253, 248, 0.94);
+      border-color: color-mix(in srgb, var(--ember) 35%, var(--line));
+      box-shadow: 0 14px 36px rgba(26, 31, 36, 0.12);
+      transform: rotate(0deg) scale(1.04);
+      z-index: 2;
+      outline: none;
+    }
+
+    .bg-quote cite {
+      display: block;
+      margin-top: 0.35rem;
+      font-family: "Outfit", sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-style: normal;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .bg-quote:hover cite,
+    .bg-quote:focus-visible cite {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .ember {
       position: absolute;
       bottom: -10px;
@@ -68,6 +128,7 @@
       opacity: 0;
       animation: floatEmber linear infinite;
       clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      pointer-events: none;
     }
 
     main {
@@ -764,13 +825,11 @@
     }
 
     @keyframes heatPulse {
-      0%, 100% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+      0%, 100% { filter: none; }
       50% {
         background-image:
-          radial-gradient(ellipse 950px 460px at 8% -5%, rgba(196, 92, 38, 0.22), transparent 60%),
-          radial-gradient(ellipse 740px 400px at 95% 8%, rgba(31, 107, 92, 0.18), transparent 55%),
-          linear-gradient(rgba(26, 31, 36, 0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(26, 31, 36, 0.035) 1px, transparent 1px),
+          radial-gradient(ellipse 950px 460px at 8% -5%, rgba(196, 92, 38, 0.24), transparent 60%),
+          radial-gradient(ellipse 740px 400px at 95% 8%, rgba(31, 107, 92, 0.2), transparent 55%),
           linear-gradient(165deg, var(--paper) 0%, var(--paper-2) 100%);
       }
     }
@@ -794,6 +853,7 @@
 <body>
   <div class="noise" aria-hidden="true"></div>
   <div class="embers" id="embers" aria-hidden="true"></div>
+  <div class="quote-field" id="quote-field" aria-hidden="true"></div>
 
   <main>
     <header class="hero">
@@ -897,6 +957,7 @@
     const fileInput = document.getElementById("resume");
     const fileName = document.getElementById("file-name");
     const embersEl = document.getElementById("embers");
+    const quoteField = document.getElementById("quote-field");
     const actionsEl = document.getElementById("actions");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -907,7 +968,29 @@
       "Quenching explanations and roadmaps…",
     ];
 
+    const BG_QUOTES = [
+      { text: "Done is better than perfect.", by: "Sheryl Sandberg" },
+      { text: "The only way to do great work is to love what you do.", by: "Steve Jobs" },
+      { text: "First, solve the problem. Then, write the code.", by: "John Johnson" },
+      { text: "Talk is cheap. Show me the code.", by: "Linus Torvalds" },
+      { text: "Simplicity is the soul of efficiency.", by: "Austin Freeman" },
+      { text: "Make it work, make it right, make it fast.", by: "Kent Beck" },
+      { text: "Code is like humor. When you have to explain it, it’s bad.", by: "Cory House" },
+      { text: "Experience is the name everyone gives to their mistakes.", by: "Oscar Wilde" },
+      { text: "The best way to predict the future is to invent it.", by: "Alan Kay" },
+      { text: "Ship early. Ship often. Learn faster.", by: "Builders' creed" },
+      { text: "Stay hungry. Stay foolish.", by: "Stewart Brand" },
+      { text: "What you do every day matters more than what you do once in a while.", by: "Gretchen Rubin" },
+      { text: "Confusion is the sweat of learning.", by: "Jon Bergmann" },
+      { text: "Start where you are. Use what you have. Do what you can.", by: "Arthur Ashe" },
+      { text: "Fortes fortuna adiuvat — fortune favors the bold.", by: "Latin proverb" },
+      { text: "Build in public. Learn in public. Grow in public.", by: "Indie hackers" },
+      { text: "A journey of a thousand miles begins with a single step.", by: "Lao Tzu" },
+      { text: "Don’t wait for opportunity. Create it.", by: "George Bernard Shaw" },
+    ];
+
     seedEmbers();
+    seedQuotes();
 
     fileInput.addEventListener("change", () => {
       fileName.textContent = fileInput.files[0]?.name || "PDF, DOCX, or TXT";
@@ -923,6 +1006,42 @@
         e.style.opacity = "0";
         embersEl.appendChild(e);
       }
+    }
+
+    function shuffle(list) {
+      const arr = [...list];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function seedQuotes() {
+      quoteField.innerHTML = "";
+      const count = Math.min(12, BG_QUOTES.length);
+      const picked = shuffle(BG_QUOTES).slice(0, count);
+      // Keep quotes away from the center content column a bit by biasing left/right
+      picked.forEach((q, i) => {
+        const el = document.createElement("blockquote");
+        el.className = "bg-quote";
+        el.tabIndex = 0;
+        el.innerHTML = `${escapeHtml(q.text)}<cite>${escapeHtml(q.by)}</cite>`;
+
+        const side = i % 2 === 0 ? "left" : "right";
+        const left =
+          side === "left"
+            ? 2 + Math.random() * 18
+            : 70 + Math.random() * 22;
+        const top = 4 + Math.random() * 88;
+        const tilt = (Math.random() * 14 - 7).toFixed(1);
+
+        el.style.left = `${left}%`;
+        el.style.top = `${top}%`;
+        el.style.setProperty("--tilt", `${tilt}deg`);
+        el.style.animationDelay = `${(Math.random() * 1.2).toFixed(2)}s`;
+        quoteField.appendChild(el);
+      });
     }
 
     function showError(msg) {

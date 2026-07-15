@@ -31,6 +31,19 @@ AptiForge-1/
 └── resume_sample.txt
 ```
 
+## Deploy on Vercel
+
+AptiForge is a Flask app. Vercel needs a root entrypoint (`server.py`) and root `requirements.txt`.
+
+1. Push to GitHub
+2. Import the repo at [vercel.com/new](https://vercel.com/new)
+3. Leave build settings as detected (Python / Flask via `server.py`)
+4. Redeploy
+
+Optional: set `GITHUB_TOKEN` in Project → Settings → Environment Variables for higher GitHub API limits.
+
+Local Flask still works with `cd backend && python app.py`.
+
 ## Setup
 
 ```bash

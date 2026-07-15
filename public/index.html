@@ -1338,7 +1338,17 @@
     }
 
     fileInput.addEventListener("change", () => {
-      fileName.textContent = fileInput.files[0]?.name || "PDF, DOCX, or TXT";
+      const chosen = fileInput.files[0];
+      fileName.textContent = chosen?.name || "PDF, DOCX, or TXT";
+      if (!chosen) return;
+      const lower = chosen.name.toLowerCase();
+      if (!(/\.(pdf|docx|txt)$/).test(lower)) {
+        showError("That file does not look like a resume. Please choose a PDF, DOCX, or TXT resume.");
+        fileInput.value = "";
+        fileName.textContent = "PDF, DOCX, or TXT";
+      } else {
+        showError("");
+      }
     });
 
     document.getElementById("sample-resume-btn").addEventListener("click", async () => {
@@ -1649,8 +1659,13 @@
           body.append("fit_mode", fitMode);
           tracks.forEach((track) => body.append("tracks", track));
           const res = await fetch("/analyze_resume", { method: "POST", body });
-          data = await res.json();
-          if (!res.ok) throw new Error(data.error || "Analyze failed");
+          data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(
+              data.error ||
+                "We could not analyze that file. Please upload a PDF, DOCX, or TXT resume."
+            );
+          }
         } else {
           let skills = [];
           let githubInfo = null;

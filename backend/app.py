@@ -16,7 +16,7 @@ from project_recommender import (
     export_roadmap_markdown,
     recommend_projects,
 )
-from resume_parser import extract_skills, read_resume_bytes
+from resume_parser import ResumeValidationError, extract_skills, validate_resume_upload
 from anthropic_client import anthropic_enabled
 from semantic_search import pinecone_enabled
 from project_assist import interview_talking_points, readme_starter, weekly_plan
@@ -121,12 +121,14 @@ def upload_resume():
         return jsonify({"error": "Empty filename"}), 400
 
     try:
-        resume_text = read_resume_bytes(file.filename, file.read())
+        resume_text = validate_resume_upload(file.filename, file.read())
         skills = extract_skills(resume_text)
         return jsonify({"skills": skills, "chars_read": len(resume_text)})
+    except ResumeValidationError as exc:
+        return jsonify({"error": str(exc)}), 400
     except Exception:
         traceback.print_exc()
-        return jsonify({"error": "Failed to parse resume"}), 500
+        return jsonify({"error": "Failed to parse resume. Please upload a PDF, DOCX, or TXT resume."}), 500
 
 
 @app.route("/analyze_resume", methods=["POST"])
@@ -148,7 +150,7 @@ def analyze_resume():
     tracks = _parse_tracks(request.form.getlist("tracks") or request.form.get("tracks"))
 
     try:
-        resume_text = read_resume_bytes(file.filename, file.read())
+        resume_text = validate_resume_upload(file.filename, file.read())
         skills = set(extract_skills(resume_text))
 
         github = None
@@ -180,9 +182,11 @@ def analyze_resume():
                 },
             }
         )
+    except ResumeValidationError as exc:
+        return jsonify({"error": str(exc)}), 400
     except Exception:
         traceback.print_exc()
-        return jsonify({"error": "Internal server error"}), 500
+        return jsonify({"error": "Failed to parse resume. Please upload a PDF, DOCX, or TXT resume."}), 500
 
 
 @app.route("/analyze_github", methods=["POST"])
